@@ -1,11 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f6f7fb;
-  --foreground: #0f172a;
-  --muted: #4b5563;
-  --border: #e2e8f0;
-  --accent: #5b5ae6;
+  --background: #f5f0e6;
+  --foreground: #3f3a36;
+  --muted: #7a6f68;
+  --border: #d8cbb8;
+  --accent: #8b705f;
+  --accent-soft: #c9b59a;
+  --header-footer: #f5f0e6;
+  --section: #e8dfd2;
+  --card: #d4c2ae;
 }
 
 @theme inline {
@@ -17,8 +21,9 @@
 
 body {
   background:
-    radial-gradient(circle at 10% 20%, rgba(91, 90, 230, 0.08), transparent 35%),
-    radial-gradient(circle at 80% 0%, rgba(34, 197, 235, 0.08), transparent 30%),
+    radial-gradient(circle at 10% 20%, rgba(139, 112, 95, 0.08), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(212, 194, 174, 0.16), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(200, 181, 154, 0.14), transparent 45%),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), "Space Grotesk", system-ui, -apple-system,

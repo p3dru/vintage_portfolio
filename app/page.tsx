@@ -96,27 +96,27 @@ const contactMethods = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen text-slate-900">
-      <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[rgba(246,247,251,0.9)]/90 backdrop-blur-md">
+    <div className="min-h-screen text-[var(--foreground)]">
+      <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)]/10 text-sm font-semibold text-[var(--accent)]">
               JP
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
                 João Pedro
               </span>
-              <span className="text-sm font-semibold text-slate-800">
+              <span className="text-sm font-semibold text-[var(--foreground)]">
                 Product Engineer
               </span>
             </div>
           </div>
-          <nav className="hidden items-center gap-4 text-sm text-slate-700 md:flex">
+          <nav className="hidden items-center gap-4 text-sm text-[var(--muted)] md:flex">
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                className="rounded-full px-3 py-2 transition hover:bg-slate-200/80"
+                className="rounded-full px-3 py-2 transition hover:bg-[var(--accent-soft)]/60"
                 href={link.href}
               >
                 {link.label}
@@ -136,16 +136,16 @@ export default function Home() {
         <div className="section-wrapper flex min-h-[85vh] items-center justify-center">
           <section
             id="inicio"
-            className="anchor-section grid min-h-[70vh] gap-10 rounded-3xl border border-[var(--border)] bg-white/80 p-8 shadow-[0_20px_80px_-60px_rgba(15,23,42,0.35)] md:min-h-[75vh] md:grid-cols-2 md:p-12"
+            className="anchor-section grid min-h-[70vh] gap-10 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(63,58,54,0.25)] md:min-h-[75vh] md:grid-cols-2 md:p-12"
           >
             <div className="space-y-6">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
                 Portfolio — v2025
               </p>
-              <h1 className="text-4xl font-semibold leading-tight text-slate-900 md:text-5xl">
+              <h1 className="text-4xl font-semibold leading-tight text-[var(--foreground)] md:text-5xl">
                 Engenharia, UX e IA aplicadas para entregar produtos com clareza e ritmo.
               </h1>
-              <p className="text-lg text-slate-600">
+              <p className="text-lg text-[var(--muted)]">
                 Transformo ideias em produtos navegáveis, com decisões guiadas por dados e
                 documentação clara. Atuo do discovery ao deploy, mantendo times alinhados e
                 entregas previsíveis.
@@ -158,7 +158,7 @@ export default function Home() {
                   Ver projetos
                 </a>
                 <a
-                  className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-slate-800 transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
                   href="#contato"
                 >
                   Contato direto
@@ -166,30 +166,30 @@ export default function Home() {
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-[var(--border)] bg-slate-50 p-4">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_40px_-28px_rgba(63,58,54,0.35)]">
+                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Disponibilidade
                 </p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900">
+                <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
                   Novos projetos
                 </p>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-[var(--muted)]">
                   MVPs técnicos, replatform e automação.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[var(--border)] bg-slate-50 p-4">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_40px_-28px_rgba(63,58,54,0.35)]">
+                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Stack preferida
                 </p>
-                <p className="mt-2 text-2xl font-semibold text-slate-900">
+                <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
                   TypeScript first
                 </p>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-[var(--muted)]">
                   Next.js, Node, SQL/NoSQL, testes e observabilidade.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[var(--border)] bg-slate-50 p-4 md:col-span-2">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_40px_-28px_rgba(63,58,54,0.35)] md:col-span-2">
+                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Diferenciais
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2 text-sm">
@@ -202,7 +202,7 @@ export default function Home() {
                   ].map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-[var(--border)] px-3 py-1 text-slate-700"
+                      className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]"
                     >
                       {item}
                     </span>
@@ -216,17 +216,17 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="projetos"
-            className="anchor-section min-h-[75vh] space-y-6 rounded-3xl border border-[var(--border)] bg-white/60 p-6 shadow-[0_20px_70px_-60px_rgba(15,23,42,0.25)] md:p-8"
+            className="anchor-section min-h-[75vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-6 shadow-[0_20px_70px_-60px_rgba(63,58,54,0.18)] md:p-8"
           >
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">
+                <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
                   Projetos
                 </p>
-                <h2 className="text-3xl font-semibold text-slate-900">
+                <h2 className="text-3xl font-semibold text-[var(--foreground)]">
                   Soluções entregues com foco técnico
                 </h2>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-[var(--muted)]">
                   Evolução do portfólio original: menos ruído, mais clareza e CTA direto.
                 </p>
               </div>
@@ -244,22 +244,22 @@ export default function Home() {
               {projects.map((project) => (
                 <a
                   key={project.title}
-                  className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-white/90 p-5 shadow-[0_20px_70px_-60px_rgba(15,23,42,0.25)] transition hover:-translate-y-1 hover:border-[var(--accent)]/50 hover:shadow-[0_26px_80px_-64px_rgba(15,23,42,0.35)]"
+                  className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(63,58,54,0.25)] transition hover:-translate-y-1 hover:border-[var(--accent)]/40 hover:shadow-[0_24px_70px_-58px_rgba(63,58,54,0.32)]"
                   href={project.link}
                   target={project.link.startsWith("http") ? "_blank" : undefined}
                   rel={project.link.startsWith("http") ? "noreferrer" : undefined}
                 >
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-slate-500">
+                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                       <span>Projeto</span>
                       <span className="text-[var(--accent)] opacity-0 transition group-hover:opacity-100">
                         Ver ↗
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold text-slate-900">
+                    <h3 className="text-xl font-semibold text-[var(--foreground)]">
                       {project.title}
                     </h3>
-                    <p className="text-sm leading-relaxed text-slate-600">
+                    <p className="text-sm leading-relaxed text-[var(--muted)]">
                       {project.summary}
                     </p>
                   </div>
@@ -267,7 +267,7 @@ export default function Home() {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-[var(--border)] bg-slate-50 px-3 py-1 text-xs text-slate-700"
+                        className="rounded-full border border-[var(--border)] bg-[var(--header-footer)] px-3 py-1 text-xs text-[var(--foreground)]"
                       >
                         {tag}
                       </span>
@@ -282,17 +282,17 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="skills"
-            className="anchor-section min-h-[70vh] space-y-6 rounded-3xl border border-[var(--border)] bg-white/80 p-8 shadow-[0_20px_80px_-60px_rgba(15,23,42,0.35)]"
+            className="anchor-section min-h-[70vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(63,58,54,0.22)]"
           >
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">
+                <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
                   Skills e Expertise
                 </p>
-                <h2 className="text-3xl font-semibold text-slate-900">
+                <h2 className="text-3xl font-semibold text-[var(--foreground)]">
                   Fundamentos sólidos e entregáveis
                 </h2>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-[var(--muted)]">
                   Conteúdo organizado e direto, inspirado na versão anterior porém mais
                   profissional.
                 </p>
@@ -303,10 +303,10 @@ export default function Home() {
               {expertise.map((area) => (
                 <div
                   key={area.title}
-                  className="rounded-2xl border border-[var(--border)] bg-slate-50 p-5"
+                  className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5"
                 >
-                  <h3 className="text-lg font-semibold text-slate-900">{area.title}</h3>
-                  <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                  <h3 className="text-lg font-semibold text-[var(--foreground)]">{area.title}</h3>
+                  <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
                     {area.items.map((item) => (
                       <li key={item} className="flex items-start gap-2">
                         <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
@@ -322,7 +322,7 @@ export default function Home() {
               {tools.map((tool) => (
                 <div
                   key={tool}
-                  className="rounded-xl border border-[var(--border)] bg-white px-4 py-3 text-sm text-slate-800"
+                  className="rounded-xl border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-sm text-[var(--foreground)]"
                 >
                   {tool}
                 </div>
@@ -334,38 +334,38 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="sobre"
-            className="anchor-section grid min-h-[75vh] gap-6 rounded-3xl border border-[var(--border)] bg-white/90 p-8 shadow-[0_20px_70px_-60px_rgba(15,23,42,0.25)] md:grid-cols-3"
+            className="anchor-section grid min-h-[75vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(63,58,54,0.18)] md:grid-cols-3"
           >
             <div className="md:col-span-2 space-y-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
                 Sobre
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
+              <h2 className="text-3xl font-semibold text-[var(--foreground)]">
                 João Pedro — engenheiro de software com olhar para produto
               </h2>
-              <p className="text-base text-slate-700">
+              <p className="text-base text-[var(--muted)]">
                 Olá, me chamo João Pedro. Gosto de estar em todo o ciclo de criação: da
                 descoberta à entrega. Tenho facilidade em socializar, priorizar e adaptar
                 soluções em andamento, mantendo compromisso com prazos e qualidade.
               </p>
-              <p className="text-base text-slate-700">
+              <p className="text-base text-[var(--muted)]">
                 Construo aplicações completas, cuidando para que design, funcionalidade e
                 escalabilidade andem juntos. No backend, foco em lógica limpa, segurança e
                 performance; no frontend, interfaces responsivas e acessíveis. IA também faz
                 parte do meu repertório — já integrei CNNs e modelos pré-treinados em
                 provas de conceito e continuo estudando para ir além.
               </p>
-              <p className="text-base text-slate-700">
+              <p className="text-base text-[var(--muted)]">
                 Fora do código, você provavelmente me encontrará praticando esportes,
                 desenhando, jogando ou mergulhado em leituras sobre tecnologia e ciências
                 sociais.
               </p>
             </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-slate-50 p-5">
-              <h3 className="text-lg font-semibold text-slate-900">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
+              <h3 className="text-lg font-semibold text-[var(--foreground)]">
                 O que estou explorando agora
               </h3>
-              <ul className="mt-3 space-y-2 text-sm text-slate-700">
+              <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
                 <li>• C e C++ para sistemas embarcados</li>
                 <li>• Programas de fomento a startups e liderança de squads enxutos</li>
                 <li>• Soluções modulares que unem web e inteligência artificial</li>
@@ -377,16 +377,16 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="contato"
-            className="anchor-section grid min-h-[65vh] gap-6 rounded-3xl border border-[var(--border)] bg-white/90 p-8 shadow-[0_20px_70px_-60px_rgba(15,23,42,0.25)] md:grid-cols-2"
+            className="anchor-section grid min-h-[65vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(63,58,54,0.18)] md:grid-cols-2"
           >
             <div className="space-y-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
                 Contato
               </p>
-              <h2 className="text-3xl font-semibold text-slate-900">
+              <h2 className="text-3xl font-semibold text-[var(--foreground)]">
                 Vamos falar sobre o próximo projeto?
               </h2>
-              <p className="text-base text-slate-700">
+              <p className="text-base text-[var(--muted)]">
                 Aberto a colaborações, consultorias e products labs. Respondo rápido e já
                 chego com próximos passos, riscos e entregas sugeridas.
               </p>
@@ -394,36 +394,36 @@ export default function Home() {
                 {contactMethods.map((method) => (
                   <a
                     key={method.label}
-                    className="flex flex-col gap-1 rounded-2xl border border-[var(--border)] bg-slate-50 p-4 transition hover:-translate-y-[1px] hover:border-[var(--accent)]/60"
+                    className="flex flex-col gap-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 transition hover:-translate-y-[1px] hover:border-[var(--accent)]/60"
                     href={method.href}
                     target={method.href.startsWith("http") ? "_blank" : undefined}
                     rel={method.href.startsWith("http") ? "noreferrer" : undefined}
                   >
-                    <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                    <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
                       {method.label}
                     </span>
-                    <span className="text-lg font-semibold text-slate-900">
+                    <span className="text-lg font-semibold text-[var(--foreground)]">
                       {method.value}
                     </span>
                   </a>
                 ))}
               </div>
             </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-slate-50 p-6">
-              <p className="text-sm font-semibold text-slate-900">Roteiro rápido</p>
-              <div className="mt-3 space-y-3 text-sm text-slate-700">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Roteiro rápido</p>
+              <div className="mt-3 space-y-3 text-sm text-[var(--muted)]">
                 <p>1) Contexto em 5 min: metas, prazo e restrições.</p>
                 <p>2) Proposta em 24h: stack, riscos, entregas e cronograma.</p>
                 <p>3) Kickoff: branch inicial, métricas e cadência semanal.</p>
               </div>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-slate-700">
+                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]">
                   Resposta em &lt; 12h
                 </span>
-                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-slate-700">
+                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]">
                   PT / EN
                 </span>
-                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-slate-700">
+                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]">
                   Remote-first
                 </span>
               </div>
@@ -432,23 +432,23 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-[var(--border)] bg-white/90 backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(15,23,42,0.35)]">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 text-sm text-slate-600 md:flex-row md:items-center md:px-6">
+      <footer className="fixed bottom-0 left-0 right-0 border-t border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(63,58,54,0.2)]">
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 text-sm text-[var(--muted)] md:flex-row md:items-center md:px-6">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
               João Pedro — Portfólio
             </p>
-            <p className="text-slate-700">Sempre aberto a construir algo novo.</p>
+            <p className="text-[var(--foreground)]">Sempre aberto a construir algo novo.</p>
           </div>
           <div className="flex items-center gap-3">
             <a
-              className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-slate-800 transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
               href="mailto:p3droon3@gmail.com"
             >
               Email
             </a>
             <a
-              className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-slate-800 transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
               href="https://www.linkedin.com/in/p3dru/"
               target="_blank"
               rel="noreferrer"
@@ -456,7 +456,7 @@ export default function Home() {
               LinkedIn
             </a>
             <a
-              className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-slate-800 transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
               href="https://github.com/p3dru"
               target="_blank"
               rel="noreferrer"
