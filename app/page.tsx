@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
 const navLinks = [
   { label: "Início", href: "#inicio" },
   { label: "Projetos", href: "#projetos" },
@@ -8,25 +13,25 @@ const navLinks = [
 
 const projects = [
   {
-    title: "Automação de processos",
+    title: "DisasterScan",
     summary:
-      "Rotinas integradas a APIs externas, monitoramento e painéis claros para acompanhar entregas.",
-    tags: ["Node.js", "Next.js", "APIs", "Telemetry"],
-    link: "https://github.com/p3dru",
+      "Plataforma inteligente para monitoramento, previsão e mitigação de desastres naturais, integrando múltiplas fontes de dados para apoiar a decisão estratégica. Indicadores, alertas e dashboards analíticos para riscos ambientais.",
+    tags: ["FastAPI", "Next.js", "PostgreSQL"],
+    link: "https://icognitiva.com/disasterscan",
   },
   {
-    title: "Dashboards e produtos data-driven",
+    title: "Classificação de Grãos com Visão Computacional",
     summary:
-      "Indicadores em tempo real, UX enxuta e camadas de segurança para stakeholders tomarem decisão rápido.",
-    tags: ["React", "Tailwind", "PostgreSQL", "Auth"],
-    link: "https://www.linkedin.com/in/p3dru/",
+      "Sistema de IA para segmentar e classificar grãos agrícolas (defeituosos, danificados e saudáveis), com pipeline de imagens, extração de características e análise de performance. Integra backend, banco e app mobile para uso prático.",
+    tags: ["YOLO", "Flutter", "PostgreSQL"],
+    link: "mailto:p3droon3@gmail.com?subject=Classifica%C3%A7%C3%A3o%20de%20Gr%C3%A3os",
   },
   {
-    title: "IA aplicada",
+    title: "Site Institucional – Programa PPGZT",
     summary:
-      "Provas de conceito com redes neurais e visão computacional, traduzidas em entregas acionáveis.",
-    tags: ["TensorFlow", "Python", "CV", "MLOps"],
-    link: "mailto:p3droon3@gmail.com?subject=Projeto%20IA",
+      "Site institucional moderno para divulgação acadêmica, com desempenho, organização de conteúdo, arquivos e suporte a múltiplos idiomas via i18n (PT/EN) e admin.",
+    tags: ["NestJS", "React", "PostgreSQL"],
+    link: "https://ppgzt.com.br/",
   },
 ];
 
@@ -69,7 +74,7 @@ const tools = [
   "Next.js, React, TypeScript",
   "Tailwind, Design Systems",
   "Node.js, FastAPI, Django",
-  "PostgreSQL, MongoDB",
+  "PostgreSQL, MySQL, MongoDB",
   "GraphQL, REST",
   "TensorFlow, Keras, YOLO",
   "Git, GitHub, CI/CD",
@@ -95,13 +100,39 @@ const contactMethods = [
 ];
 
 export default function Home() {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("theme");
+    if (stored === "dark" || stored === "light") {
+      setTheme(stored);
+      document.documentElement.setAttribute("data-theme", stored);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    window.localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   return (
     <div className="min-h-screen text-[var(--foreground)]">
       <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)]/10 text-sm font-semibold text-[var(--accent)]">
-              JP
+            <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[var(--border)] bg-[var(--header-footer)] shadow-sm">
+              <Image
+                src="/avatar.png"
+                alt="Avatar de João Pedro"
+                fill
+                sizes="48px"
+                className="object-cover"
+                priority
+              />
             </div>
             <div className="flex flex-col leading-tight">
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
@@ -123,12 +154,13 @@ export default function Home() {
               </a>
             ))}
           </nav>
-          <a
-            className="hidden rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-[1px] hover:shadow-md md:inline-flex"
-            href="mailto:p3droon3@gmail.com?subject=Vamos%20construir"
+          <button
+            className="hidden rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)] md:inline-flex"
+            type="button"
+            onClick={toggleTheme}
           >
-            Vamos conversar
-          </a>
+            {theme === "light" ? "Tema escuro" : "Tema claro"}
+          </button>
         </div>
       </header>
 
@@ -136,7 +168,7 @@ export default function Home() {
         <div className="section-wrapper flex min-h-[85vh] items-center justify-center">
           <section
             id="inicio"
-            className="anchor-section grid min-h-[70vh] gap-10 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(63,58,54,0.25)] md:min-h-[75vh] md:grid-cols-2 md:p-12"
+            className="anchor-section grid min-h-[70vh] gap-10 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:min-h-[75vh] md:grid-cols-2 md:p-12"
           >
             <div className="space-y-6">
               <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
@@ -166,7 +198,7 @@ export default function Home() {
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_40px_-28px_rgba(63,58,54,0.35)]">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)]">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Disponibilidade
                 </p>
@@ -177,7 +209,7 @@ export default function Home() {
                   MVPs técnicos, replatform e automação.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_40px_-28px_rgba(63,58,54,0.35)]">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)]">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Stack preferida
                 </p>
@@ -188,7 +220,7 @@ export default function Home() {
                   Next.js, Node, SQL/NoSQL, testes e observabilidade.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_40px_-28px_rgba(63,58,54,0.35)] md:col-span-2">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] md:col-span-2">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Diferenciais
                 </p>
@@ -216,7 +248,7 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="projetos"
-            className="anchor-section min-h-[75vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-6 shadow-[0_20px_70px_-60px_rgba(63,58,54,0.18)] md:p-8"
+            className="anchor-section min-h-[75vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-6 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:p-8"
           >
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
@@ -227,7 +259,7 @@ export default function Home() {
                   Soluções entregues com foco técnico
                 </h2>
                 <p className="text-sm text-[var(--muted)]">
-                  Evolução do portfólio original: menos ruído, mais clareza e CTA direto.
+                  {/* Evolução do portfólio original: menos ruído, mais clareza e CTA direto. */}
                 </p>
               </div>
               <a
@@ -244,7 +276,7 @@ export default function Home() {
               {projects.map((project) => (
                 <a
                   key={project.title}
-                  className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(63,58,54,0.25)] transition hover:-translate-y-1 hover:border-[var(--accent)]/40 hover:shadow-[0_24px_70px_-58px_rgba(63,58,54,0.32)]"
+                  className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)]/40 hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)]"
                   href={project.link}
                   target={project.link.startsWith("http") ? "_blank" : undefined}
                   rel={project.link.startsWith("http") ? "noreferrer" : undefined}
@@ -282,7 +314,7 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="skills"
-            className="anchor-section min-h-[70vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(63,58,54,0.22)]"
+            className="anchor-section min-h-[70vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.2)]"
           >
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
@@ -293,8 +325,8 @@ export default function Home() {
                   Fundamentos sólidos e entregáveis
                 </h2>
                 <p className="text-sm text-[var(--muted)]">
-                  Conteúdo organizado e direto, inspirado na versão anterior porém mais
-                  profissional.
+                  {/* Conteúdo organizado e direto, inspirado na versão anterior porém mais
+                  profissional. */}
                 </p>
               </div>
             </div>
@@ -334,7 +366,7 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="sobre"
-            className="anchor-section grid min-h-[75vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(63,58,54,0.18)] md:grid-cols-3"
+            className="anchor-section grid min-h-[75vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:grid-cols-3"
           >
             <div className="md:col-span-2 space-y-4">
               <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
@@ -377,7 +409,7 @@ export default function Home() {
         <div className="section-wrapper flex min-h-screen items-center justify-center">
           <section
             id="contato"
-            className="anchor-section grid min-h-[65vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(63,58,54,0.18)] md:grid-cols-2"
+            className="anchor-section grid min-h-[65vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:grid-cols-2"
           >
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
@@ -432,7 +464,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(63,58,54,0.2)]">
+      <footer className="fixed bottom-0 left-0 right-0 border-t border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(58,49,43,0.16)]">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 text-sm text-[var(--muted)] md:flex-row md:items-center md:px-6">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">

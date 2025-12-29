@@ -16,7 +16,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pedro Duarte — Portfolio",
+  title: "João Pedro — Portfolio",
   description: "Soluções web rápidas, técnicas e orientadas a produto.",
 };
 
