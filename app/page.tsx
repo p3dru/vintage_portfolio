@@ -101,6 +101,7 @@ const contactMethods = [
 
 export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [activeSection, setActiveSection] = useState<string>("inicio");
 
   useEffect(() => {
     const stored = window.localStorage.getItem("theme");
@@ -118,6 +119,30 @@ export default function Home() {
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target.id) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const sections = navLinks
+      .map((link) => document.getElementById(link.href.replace("#", "")))
+      .filter(Boolean) as HTMLElement[];
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section));
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen text-[var(--foreground)]">
@@ -163,6 +188,32 @@ export default function Home() {
           </button>
         </div>
       </header>
+
+      <div className="fixed left-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 md:flex">
+        {navLinks.map((link) => {
+          const id = link.href.replace("#", "");
+          const isActive = activeSection === id;
+          return (
+            <a
+              key={link.href}
+              href={link.href}
+              className="group relative flex h-4 w-4 items-center justify-center"
+              aria-label={link.label}
+            >
+              <span
+                className={`block h-4 w-4 rounded-full border transition ${
+                  isActive
+                    ? "border-[var(--accent)] bg-[var(--accent)]"
+                    : "border-[var(--border)] bg-[var(--header-footer)] group-hover:border-[var(--accent)]"
+                }`}
+              />
+              <span className="absolute left-5 hidden rounded-md bg-[var(--foreground)] px-2 py-1 text-[11px] text-[var(--background)] shadow-sm group-hover:inline">
+                {link.label}
+              </span>
+            </a>
+          );
+        })}
+      </div>
 
       <main className="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-12 pb-28 md:px-6 md:py-16 md:pb-32">
         <div className="section-wrapper flex min-h-[85vh] items-center justify-center">
