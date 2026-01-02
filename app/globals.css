@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Krona+One&family=Tangerine:wght@400;700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -10,19 +11,21 @@
   --header-footer: #f7f1ea;
   --section: #ede3d7;
   --card: #dcc7b4;
+  --cta-text: #26212d;
 }
 
 /* Tema escuro vintage */
 [data-theme="dark"] {
-  --background: #0f0b09;
-  --foreground: #f6eee6;
-  --muted: #c8b7a7;
-  --border: #241c16;
-  --accent: #e5c1a9;
-  --accent-soft: #a68d7b;
-  --header-footer: #17110d;
-  --section: #19130f;
-  --card: #241c16;
+  --background: #111015;
+  --foreground: #f3efe9;
+  --muted: #b8b1a7;
+  --border: #26232d;
+  --accent: #e4c28c;
+  --accent-soft: #9d8c7a;
+  --header-footer: #1a1820;
+  --section: #1f1c25;
+  --card: #26212d;
+  --cta-text: #26212d;
 }
 
 @theme inline {
@@ -44,8 +47,16 @@ body {
   scroll-snap-type: y proximity;
 }
 
+[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(228, 194, 140, 0.08), transparent 38%),
+    radial-gradient(circle at 82% 6%, rgba(38, 35, 45, 0.24), transparent 34%),
+    radial-gradient(circle at 48% 94%, rgba(38, 33, 45, 0.3), transparent 45%),
+    var(--background);
+}
+
 ::selection {
-  background: rgba(91, 90, 230, 0.2);
+  background: rgba(228, 194, 140, 0.18);
   color: var(--foreground);
 }
 
@@ -61,4 +72,16 @@ html {
 .section-wrapper {
   scroll-snap-align: center;
   scroll-margin-top: 140px;
+}
+
+.font-ui {
+  font-family: "Tangerine", cursive;
+}
+
+.font-ux {
+  font-family: "Dancing Script", cursive;
+}
+
+.font-ia {
+  font-family: "Krona One", sans-serif;
 }

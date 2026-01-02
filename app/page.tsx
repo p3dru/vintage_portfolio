@@ -164,7 +164,7 @@ export default function Home() {
                 João Pedro
               </span>
               <span className="text-sm font-semibold text-[var(--foreground)]">
-                Product Engineer
+                Analista, Desenvolvedor e Engenheiro de Produto
               </span>
             </div>
           </div>
@@ -172,10 +172,21 @@ export default function Home() {
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                className="rounded-full px-3 py-2 transition hover:bg-[var(--accent-soft)]/60"
+                className={`group relative rounded-full px-3 py-2 transition-all duration-200 hover:bg-[var(--accent-soft)]/60 ${
+                  activeSection === link.href.replace("#", "")
+                    ? "text-[var(--foreground)]"
+                    : ""
+                }`}
                 href={link.href}
               >
                 {link.label}
+                <span
+                  className={`absolute inset-x-2 -bottom-1 h-[2px] origin-left scale-x-0 rounded-full bg-[var(--accent)] transition-transform duration-200 ${
+                    activeSection === link.href.replace("#", "")
+                      ? "scale-x-100"
+                      : "group-hover:scale-x-100"
+                  }`}
+                />
               </a>
             ))}
           </nav>
@@ -201,9 +212,9 @@ export default function Home() {
               aria-label={link.label}
             >
               <span
-                className={`block h-4 w-4 rounded-full border transition ${
+                className={`block h-4 w-4 rounded-full border transition-all duration-200 ${
                   isActive
-                    ? "border-[var(--accent)] bg-[var(--accent)]"
+                    ? "border-[var(--accent)] bg-[var(--accent)] shadow-[0_0_0_6px_rgba(176,125,98,0.25)] scale-110"
                     : "border-[var(--border)] bg-[var(--header-footer)] group-hover:border-[var(--accent)]"
                 }`}
               />
@@ -223,10 +234,14 @@ export default function Home() {
           >
             <div className="space-y-6">
               <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
-                Portfolio — v2025
+                Portfolio — v2026.1
               </p>
               <h1 className="text-4xl font-semibold leading-tight text-[var(--foreground)] md:text-5xl">
-                Engenharia, UX e IA aplicadas para entregar produtos com clareza e ritmo.
+                Engenharia,{" "}
+                <span className="font-ui text-[var(--accent)]">UI</span>,{" "}
+                <span className="font-ux text-[var(--accent)]">UX</span> e{" "}
+                <span className="font-ia text-[var(--accent)]">IA</span> aplicadas para
+                entregar produtos com clareza e ritmo.
               </h1>
               <p className="text-lg text-[var(--muted)]">
                 Transformo ideias em produtos navegáveis, com decisões guiadas por dados e
@@ -235,7 +250,7 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap gap-3 text-sm">
                 <a
-                  className="rounded-full bg-[var(--accent)] px-4 py-2 font-semibold text-white shadow-sm transition hover:-translate-y-[1px] hover:shadow-md"
+                  className="rounded-full border-2 border-[var(--accent)] bg-[var(--accent-soft)] px-4 py-2 font-semibold text-[var(--cta-text)] shadow-sm transition hover:-translate-y-[1px] hover:bg-[var(--accent)] hover:text-[var(--background)] hover:shadow-md"
                   href="#projetos"
                 >
                   Ver projetos
@@ -249,7 +264,7 @@ export default function Home() {
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)]">
+              <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)]">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Disponibilidade
                 </p>
@@ -260,7 +275,7 @@ export default function Home() {
                   MVPs técnicos, replatform e automação.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)]">
+              <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)]">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Stack preferida
                 </p>
@@ -271,25 +286,25 @@ export default function Home() {
                   Next.js, Node, SQL/NoSQL, testes e observabilidade.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] md:col-span-2">
+              <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] md:col-span-2">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Diferenciais
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2 text-sm">
-                  {[
-                    "Discovery ágil",
-                    "UX objetiva",
-                    "Docs leves",
-                    "Entrega contínua",
-                    "IA aplicada",
-                  ].map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]"
-                    >
-                      {item}
-                    </span>
-                  ))}
+                {[
+                  "Discovery ágil",
+                  "UX objetiva",
+                  "Docs leves",
+                  "Entrega contínua",
+                  "IA aplicada",
+                ].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]"
+                  >
+                    {item}
+                  </span>
+                ))}
                 </div>
               </div>
             </div>
@@ -492,7 +507,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+            <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-6">
               <p className="text-sm font-semibold text-[var(--foreground)]">Roteiro rápido</p>
               <div className="mt-3 space-y-3 text-sm text-[var(--muted)]">
                 <p>1) Contexto em 5 min: metas, prazo e restrições.</p>
@@ -500,13 +515,13 @@ export default function Home() {
                 <p>3) Kickoff: branch inicial, métricas e cadência semanal.</p>
               </div>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]">
+                <span className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]">
                   Resposta em &lt; 12h
                 </span>
-                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]">
+                <span className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]">
                   PT / EN
                 </span>
-                <span className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)]">
+                <span className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]">
                   Remote-first
                 </span>
               </div>
