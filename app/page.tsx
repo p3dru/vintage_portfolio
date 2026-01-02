@@ -505,31 +505,35 @@ export default function Home() {
                       {method.value}
                     </span>
                   </a>
-                ))}
-              </div>
+            ))}
+          </div>
+          </div>
+          <div className="flex h-full rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-3">
+            <div className="relative h-full w-full overflow-hidden rounded-xl">
+              {theme === "light" ? (
+                <Image
+                  src="/tema-claro.png"
+                  alt="Roteiro rápido - tema claro"
+                  fill
+                  sizes="(min-width: 768px) 500px, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <Image
+                  src="/tema-escuro.png"
+                  alt="Roteiro rápido - tema escuro"
+                  fill
+                  sizes="(min-width: 768px) 500px, 100vw"
+                  className="object-cover"
+                  priority
+                />
+              )}
             </div>
-            <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-6">
-              <p className="text-sm font-semibold text-[var(--foreground)]">Roteiro rápido</p>
-              <div className="mt-3 space-y-3 text-sm text-[var(--muted)]">
-                <p>1) Contexto em 5 min: metas, prazo e restrições.</p>
-                <p>2) Proposta em 24h: stack, riscos, entregas e cronograma.</p>
-                <p>3) Kickoff: branch inicial, métricas e cadência semanal.</p>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]">
-                  Resposta em &lt; 12h
-                </span>
-                <span className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]">
-                  PT / EN
-                </span>
-                <span className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]">
-                  Remote-first
-                </span>
-              </div>
-            </div>
-          </section>
-        </div>
-      </main>
+          </div>
+        </section>
+      </div>
+    </main>
 
       <footer className="fixed bottom-0 left-0 right-0 border-t border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(58,49,43,0.16)]">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 text-sm text-[var(--muted)] md:flex-row md:items-center md:px-6">
