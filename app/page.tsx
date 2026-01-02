@@ -39,7 +39,7 @@ const expertise = [
   {
     title: "Produto e Discovery",
     items: [
-      "Entrevistas, personas e fluxos para priorizar certo",
+      "Meetings, personas e fluxos para priorizar certo",
       "Workshops, prototipação e definição de requisitos",
       "Handoff claro e documentação concisa",
     ],
@@ -250,7 +250,7 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap gap-3 text-sm">
                 <a
-                  className="rounded-full border-2 border-[var(--accent)] bg-[var(--accent-soft)] px-4 py-2 font-semibold text-[var(--cta-text)] shadow-sm transition hover:-translate-y-[1px] hover:bg-[var(--accent)] hover:text-[var(--background)] hover:shadow-md"
+                  className="rounded-full border-2 border-[var(--accent)] bg-[var(--accent)] px-4 py-2 font-semibold text-[var(--cta-text)] shadow-sm transition-transform duration-200 hover:-translate-y-[1px] hover:shadow-md hover:brightness-95"
                   href="#projetos"
                 >
                   Ver projetos
@@ -280,10 +280,10 @@ export default function Home() {
                   Stack preferida
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-[var(--foreground)]">
-                  TypeScript first
+                  Python & PostgreSQL first
                 </p>
                 <p className="text-sm text-[var(--muted)]">
-                  Next.js, Node, SQL/NoSQL, testes e observabilidade.
+                  React/Next.js, testes e observabilidade.
                 </p>
               </div>
               <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] md:col-span-2">
@@ -464,9 +464,11 @@ export default function Home() {
                 O que estou explorando agora
               </h3>
               <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
-                <li>• C e C++ para sistemas embarcados</li>
-                <li>• Programas de fomento a startups e liderança de squads enxutos</li>
+                <li>• Como aprimorar códigos e documentações</li>
+                <li>• Refatoração de código</li>
+                <li>• Programas de fomento a startups</li>
                 <li>• Soluções modulares que unem web e inteligência artificial</li>
+                <li>• Modularização de responsabilidades em squads</li>
               </ul>
             </div>
           </section>
@@ -485,8 +487,7 @@ export default function Home() {
                 Vamos falar sobre o próximo projeto?
               </h2>
               <p className="text-base text-[var(--muted)]">
-                Aberto a colaborações, consultorias e products labs. Respondo rápido e já
-                chego com próximos passos, riscos e entregas sugeridas.
+                Aberto a colaborações, consultorias e products labs.
               </p>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {contactMethods.map((method) => (

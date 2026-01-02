@@ -11,7 +11,7 @@
   --header-footer: #f7f1ea;
   --section: #ede3d7;
   --card: #dcc7b4;
-  --cta-text: #26212d;
+  --cta-text: var(--section);
 }
 
 /* Tema escuro vintage */
