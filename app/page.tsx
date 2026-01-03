@@ -509,23 +509,23 @@ export default function Home() {
           </div>
           </div>
           <div className="flex h-full rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-3">
-            <div className="relative h-full w-full overflow-hidden rounded-xl">
+            <div className="relative h-full w-full overflow-hidden rounded-xl bg-[var(--header-footer)]">
               {theme === "light" ? (
                 <Image
-                  src="/tema-claro.png"
+                  src="/claro.png"
                   alt="Roteiro rápido - tema claro"
                   fill
                   sizes="(min-width: 768px) 500px, 100vw"
-                  className="object-cover"
+                  className="object-contain"
                   priority
                 />
               ) : (
                 <Image
-                  src="/tema-escuro.png"
+                  src="/escuro.png"
                   alt="Roteiro rápido - tema escuro"
                   fill
                   sizes="(min-width: 768px) 500px, 100vw"
-                  className="object-cover"
+                  className="object-contain"
                   priority
                 />
               )}
