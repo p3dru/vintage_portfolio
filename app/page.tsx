@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Image from "next/image";
 
 const navLinks = [
@@ -102,6 +102,8 @@ const contactMethods = [
 export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [activeSection, setActiveSection] = useState<string>("inicio");
+  const year = new Date().getFullYear();
+  const [showStatusModal, setShowStatusModal] = useState(false);
 
   useEffect(() => {
     const stored = window.localStorage.getItem("theme");
@@ -330,49 +332,64 @@ export default function Home() {
               </div>
               <a
                 className="text-sm font-semibold text-[var(--accent)] transition hover:underline"
-                href="https://p3dru.github.io/portfolio/works"
+                href="https://p3dru.github.io/portfolio/"
                 target="_blank"
                 rel="noreferrer"
               >
-                Histórico anterior ↗
+                Portfólio anterior ↗
               </a>
             </div>
 
             <div className="grid gap-4 md:grid-cols-3">
-              {projects.map((project) => (
-                <a
-                  key={project.title}
-                  className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)]/40 hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)]"
-                  href={project.link}
-                  target={project.link.startsWith("http") ? "_blank" : undefined}
-                  rel={project.link.startsWith("http") ? "noreferrer" : undefined}
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
-                      <span>Projeto</span>
-                      <span className="text-[var(--accent)] opacity-0 transition group-hover:opacity-100">
-                        Ver ↗
-                      </span>
+              {projects.map((project) => {
+                const isInDev =
+                  project.title.toLowerCase().includes("classificação de grãos");
+
+                return (
+                  <a
+                    key={project.title}
+                    className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)]/40 hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)]"
+                    href={isInDev ? "#" : project.link}
+                    onClick={(e) => {
+                      if (isInDev) {
+                        e.preventDefault();
+                        setShowStatusModal(true);
+                      }
+                    }}
+                    target={
+                      !isInDev && project.link.startsWith("http") ? "_blank" : undefined
+                    }
+                    rel={
+                      !isInDev && project.link.startsWith("http") ? "noreferrer" : undefined
+                    }
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
+                        <span>Projeto</span>
+                        <span className="text-[var(--accent)] opacity-0 transition group-hover:opacity-100">
+                          Ver ↗
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-[var(--foreground)]">
+                        {project.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-[var(--muted)]">
+                        {project.summary}
+                      </p>
                     </div>
-                    <h3 className="text-xl font-semibold text-[var(--foreground)]">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-[var(--muted)]">
-                      {project.summary}
-                    </p>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-[var(--border)] bg-[var(--header-footer)] px-3 py-1 text-xs text-[var(--foreground)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </a>
-              ))}
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full border border-[var(--border)] bg-[var(--header-footer)] px-3 py-1 text-xs text-[var(--foreground)]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </a>
+                );
+              })}
             </div>
           </section>
         </div>
@@ -535,13 +552,57 @@ export default function Home() {
       </div>
     </main>
 
+      {showStatusModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
+          <div className="max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--header-footer)] p-6 text-[var(--foreground)] shadow-xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
+                  Aviso
+                </p>
+                <h3 className="mt-1 text-xl font-semibold">Projeto em desenvolvimento</h3>
+              </div>
+              <button
+                type="button"
+                className="rounded-full border border-[var(--border)] px-3 py-1 text-sm text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                onClick={() => setShowStatusModal(false)}
+              >
+                Fechar
+              </button>
+            </div>
+            <p className="mt-4 text-sm text-[var(--muted)]">
+              Este projeto está em desenvolvimento ou não foi disponibilizado ainda.
+              Para mais detalhes, entre em contato e compartilho mais alguns detalhes dentro do possível sobre a versão mais recente.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2 text-sm">
+              <a
+                className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                href="mailto:p3droon3@gmail.com"
+              >
+                Email
+              </a>
+              <a
+                className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                href="https://www.linkedin.com/in/p3dru/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       <footer className="fixed bottom-0 left-0 right-0 border-t border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(58,49,43,0.16)]">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 text-sm text-[var(--muted)] md:flex-row md:items-center md:px-6">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
-              João Pedro — Portfólio
+              Portfólio
             </p>
-            <p className="text-[var(--foreground)]">Sempre aberto a construir algo novo.</p>
+            <p className="text-[var(--foreground)]">
+              © {year} — Todos os direitos (ainda não) reservados.
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <a
