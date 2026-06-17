@@ -20,6 +20,13 @@ const projects = [
     link: "https://icognitiva.com/disasterscan",
   },
   {
+    title: "LibreETL",
+    summary:
+      "Plataforma client-side (zero-backend) para tratamento visual de dados. Executa limpeza e transformação de datasets diretamente no navegador, sem código. Conta com motor de diagnóstico e garante total privacidade via arquitetura Local-First.",
+    tags: ["Next.ts", "Dexie.js", "Zod"],
+    link: "https://libre-etl.vercel.app/",
+  },
+  {
     title: "Classificação de Grãos com Visão Computacional",
     summary:
       "Sistema de IA para segmentar e classificar grãos agrícolas (defeituosos, danificados e saudáveis), com pipeline de imagens, extração de características e análise de performance. Integra backend, banco e app mobile para uso prático.",
@@ -89,8 +96,8 @@ const contactMethods = [
   },
   {
     label: "LinkedIn",
-    value: "/in/p3dru",
-    href: "https://www.linkedin.com/in/p3dru/",
+    value: "/in/dev-pedro",
+    href: "https://www.linkedin.com/in/dev-pedro/",
   },
   {
     label: "GitHub",
@@ -103,7 +110,7 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [activeSection, setActiveSection] = useState<string>("inicio");
   const year = new Date().getFullYear();
-  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [activeModal, setActiveModal] = useState<"dev" | "offline" | null>(null);
 
   useEffect(() => {
     const stored = window.localStorage.getItem("theme");
@@ -174,20 +181,18 @@ export default function Home() {
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                className={`group relative rounded-full px-3 py-2 transition-all duration-200 hover:bg-[var(--accent-soft)]/60 ${
-                  activeSection === link.href.replace("#", "")
+                className={`group relative rounded-full px-3 py-2 transition-all duration-200 hover:bg-[var(--accent-soft)]/60 ${activeSection === link.href.replace("#", "")
                     ? "text-[var(--foreground)]"
                     : ""
-                }`}
+                  }`}
                 href={link.href}
               >
                 {link.label}
                 <span
-                  className={`absolute inset-x-2 -bottom-1 h-[2px] origin-left scale-x-0 rounded-full bg-[var(--accent)] transition-transform duration-200 ${
-                    activeSection === link.href.replace("#", "")
+                  className={`absolute inset-x-2 -bottom-1 h-[2px] origin-left scale-x-0 rounded-full bg-[var(--accent)] transition-transform duration-200 ${activeSection === link.href.replace("#", "")
                       ? "scale-x-100"
                       : "group-hover:scale-x-100"
-                  }`}
+                    }`}
                 />
               </a>
             ))}
@@ -214,11 +219,10 @@ export default function Home() {
               aria-label={link.label}
             >
               <span
-                className={`block h-4 w-4 rounded-full border transition-all duration-200 ${
-                  isActive
+                className={`block h-4 w-4 rounded-full border transition-all duration-200 ${isActive
                     ? "border-[var(--accent)] bg-[var(--accent)] shadow-[0_0_0_6px_rgba(176,125,98,0.25)] scale-110"
                     : "border-[var(--border)] bg-[var(--header-footer)] group-hover:border-[var(--accent)]"
-                }`}
+                  }`}
               />
               <span className="absolute left-5 hidden rounded-md bg-[var(--foreground)] px-2 py-1 text-[11px] text-[var(--background)] shadow-sm group-hover:inline">
                 {link.label}
@@ -293,20 +297,20 @@ export default function Home() {
                   Diferenciais
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2 text-sm">
-                {[
-                  "Discovery ágil",
-                  "UX objetiva",
-                  "Docs leves",
-                  "Entrega contínua",
-                  "IA aplicada",
-                ].map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]"
-                  >
-                    {item}
-                  </span>
-                ))}
+                  {[
+                    "Discovery ágil",
+                    "UX objetiva",
+                    "Docs leves",
+                    "Entrega contínua",
+                    "IA aplicada",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-[var(--foreground)]"
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -344,23 +348,28 @@ export default function Home() {
               {projects.map((project) => {
                 const isInDev =
                   project.title.toLowerCase().includes("classificação de grãos");
+                const isOffline =
+                  project.title.toLowerCase().includes("programa ppgzt");
 
                 return (
                   <a
                     key={project.title}
                     className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)]/40 hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)]"
-                    href={isInDev ? "#" : project.link}
+                    href={isInDev || isOffline ? "#" : project.link}
                     onClick={(e) => {
                       if (isInDev) {
                         e.preventDefault();
-                        setShowStatusModal(true);
+                        setActiveModal("dev");
+                      } else if (isOffline) {
+                        e.preventDefault();
+                        setActiveModal("offline");
                       }
                     }}
                     target={
-                      !isInDev && project.link.startsWith("http") ? "_blank" : undefined
+                      !isInDev && !isOffline && project.link.startsWith("http") ? "_blank" : undefined
                     }
                     rel={
-                      !isInDev && project.link.startsWith("http") ? "noreferrer" : undefined
+                      !isInDev && !isOffline && project.link.startsWith("http") ? "noreferrer" : undefined
                     }
                   >
                     <div className="space-y-3">
@@ -522,37 +531,37 @@ export default function Home() {
                       {method.value}
                     </span>
                   </a>
-            ))}
-          </div>
-          </div>
-          <div className="flex h-full rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-3">
-            <div className="relative h-full w-full overflow-hidden rounded-xl bg-[var(--header-footer)]">
-              {theme === "light" ? (
-                <Image
-                  src="/claro.png"
-                  alt="Roteiro rápido - tema claro"
-                  fill
-                  sizes="(min-width: 768px) 500px, 100vw"
-                  className="object-contain"
-                  priority
-                />
-              ) : (
-                <Image
-                  src="/escuro.png"
-                  alt="Roteiro rápido - tema escuro"
-                  fill
-                  sizes="(min-width: 768px) 500px, 100vw"
-                  className="object-contain"
-                  priority
-                />
-              )}
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      </div>
-    </main>
+            <div className="flex h-full rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-3">
+              <div className="relative h-full w-full overflow-hidden rounded-xl bg-[var(--header-footer)]">
+                {theme === "light" ? (
+                  <Image
+                    src="/claro.png"
+                    alt="Roteiro rápido - tema claro"
+                    fill
+                    sizes="(min-width: 768px) 500px, 100vw"
+                    className="object-contain"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/escuro.png"
+                    alt="Roteiro rápido - tema escuro"
+                    fill
+                    sizes="(min-width: 768px) 500px, 100vw"
+                    className="object-contain"
+                    priority
+                  />
+                )}
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
 
-      {showStatusModal && (
+      {activeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
           <div className="max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--header-footer)] p-6 text-[var(--foreground)] shadow-xl">
             <div className="flex items-start justify-between gap-4">
@@ -560,19 +569,22 @@ export default function Home() {
                 <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
                   Aviso
                 </p>
-                <h3 className="mt-1 text-xl font-semibold">Projeto em desenvolvimento</h3>
+                <h3 className="mt-1 text-xl font-semibold">
+                  {activeModal === "dev" ? "Projeto em desenvolvimento" : "Sistema indisponível"}
+                </h3>
               </div>
               <button
                 type="button"
                 className="rounded-full border border-[var(--border)] px-3 py-1 text-sm text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                onClick={() => setShowStatusModal(false)}
+                onClick={() => setActiveModal(null)}
               >
                 Fechar
               </button>
             </div>
             <p className="mt-4 text-sm text-[var(--muted)]">
-              Este projeto está em desenvolvimento ou não foi disponibilizado ainda.
-              Para mais detalhes, entre em contato e compartilho mais alguns detalhes dentro do possível sobre a versão mais recente.
+              {activeModal === "dev" 
+                ? "Este projeto está em desenvolvimento ou não foi disponibilizado ainda. Para mais detalhes, entre em contato e compartilho mais alguns detalhes dentro do possível sobre a versão mais recente."
+                : "O sistema deste projeto foi temporariamente retirado do ar devido ao término do tempo de contrato de hospedagem. Se quiser saber mais detalhes técnicos sobre como ele foi construído, fique à vontade para entrar em contato!"}
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-sm">
               <a
@@ -583,7 +595,7 @@ export default function Home() {
               </a>
               <a
                 className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                href="https://www.linkedin.com/in/p3dru/"
+                href="https://www.linkedin.com/in/dev-pedro/"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -613,7 +625,7 @@ export default function Home() {
             </a>
             <a
               className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
-              href="https://www.linkedin.com/in/p3dru/"
+              href="https://www.linkedin.com/in/dev-pedro/"
               target="_blank"
               rel="noreferrer"
             >

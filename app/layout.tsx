@@ -18,6 +18,9 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "João Pedro — Portfolio",
   description: "Soluções web rápidas, técnicas e orientadas a produto.",
+  icons: {
+    icon: "/avatar.png",
+  },
 };
 
 export default function RootLayout({
