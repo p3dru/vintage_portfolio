@@ -13,6 +13,13 @@ const navLinks = [
 
 const projects = [
   {
+    title: "Mini Lakehouse Agro",
+    summary:
+      "Plataforma analítica end-to-end baseada em Arquitetura Medallion focada no agronegócio brasileiro. Orquestra pipelines ETL automatizados para unificar múltiplas fontes públicas (clima, safras e mercado financeiro), alimentando um motor de correlação estatística que cruza indicadores e entrega insights estratégicos através de dashboards interativos.",
+    tags: ["Kestra", "FastAPI", "DuckDB", "Next.js"],
+    link: "https://github.com/p3dru/agro-datalake/tree/main",
+  },
+  {
     title: "DisasterScan",
     summary:
       "Plataforma inteligente para monitoramento, previsão e mitigação de desastres naturais, integrando múltiplas fontes de dados para apoiar a decisão estratégica. Indicadores, alertas e dashboards analíticos para riscos ambientais.",
