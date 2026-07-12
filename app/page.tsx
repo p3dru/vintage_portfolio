@@ -13,18 +13,25 @@ const navLinks = [
 
 const projects = [
   {
-    title: "Mini Lakehouse Agro",
-    summary:
-      "Plataforma analítica end-to-end baseada em Arquitetura Medallion focada no agronegócio brasileiro. Orquestra pipelines ETL automatizados para unificar múltiplas fontes públicas (clima, safras e mercado financeiro), alimentando um motor de correlação estatística que cruza indicadores e entrega insights estratégicos através de dashboards interativos.",
-    tags: ["Kestra", "FastAPI", "DuckDB", "Next.js"],
-    link: "https://github.com/p3dru/agro-datalake/tree/main",
-  },
-  {
     title: "DisasterScan",
     summary:
       "Plataforma inteligente para monitoramento, previsão e mitigação de desastres naturais, integrando múltiplas fontes de dados para apoiar a decisão estratégica. Indicadores, alertas e dashboards analíticos para riscos ambientais.",
     tags: ["FastAPI", "Next.js", "PostgreSQL"],
     link: "https://icognitiva.com/disasterscan",
+  },
+  {
+    title: "Atlas Basis (Motor de Otimização Logística 3D)",
+    summary:
+      "Plataforma de orquestração logística e roteamento tático com renderização imersiva em mapas 3D. O sistema distribui rotas para múltiplas frotas utilizando clustering K-Means e soluciona algoritmos de Caixeiro Viajante (TSP) para ciclos fechados. Todo o processamento matemático complexo e integração com matrizes OSRM é isolado no client-side via Web Workers, garantindo simulações espaciais animadas de alta performance sem travar a interface.",
+    tags: ["Vue 3", "MapLibre", "OSRM", "Web Workers"],
+    link: "https://atlasbasis.vercel.app/",
+  },
+  {
+    title: "Mini Lakehouse Agro",
+    summary:
+      "Plataforma analítica end-to-end baseada em Arquitetura Medallion focada no agronegócio brasileiro. Orquestra pipelines ETL automatizados para unificar múltiplas fontes públicas (clima, safras e mercado financeiro), alimentando um motor de correlação estatística que cruza indicadores e entrega insights estratégicos através de dashboards interativos.",
+    tags: ["Kestra", "FastAPI", "DuckDB", "Next.js"],
+    link: "https://github.com/p3dru/agro-datalake/tree/main",
   },
   {
     title: "LibreETL",
@@ -189,16 +196,16 @@ export default function Home() {
               <a
                 key={link.href}
                 className={`group relative rounded-full px-3 py-2 transition-all duration-200 hover:bg-[var(--accent-soft)]/60 ${activeSection === link.href.replace("#", "")
-                    ? "text-[var(--foreground)]"
-                    : ""
+                  ? "text-[var(--foreground)]"
+                  : ""
                   }`}
                 href={link.href}
               >
                 {link.label}
                 <span
                   className={`absolute inset-x-2 -bottom-1 h-[2px] origin-left scale-x-0 rounded-full bg-[var(--accent)] transition-transform duration-200 ${activeSection === link.href.replace("#", "")
-                      ? "scale-x-100"
-                      : "group-hover:scale-x-100"
+                    ? "scale-x-100"
+                    : "group-hover:scale-x-100"
                     }`}
                 />
               </a>
@@ -227,8 +234,8 @@ export default function Home() {
             >
               <span
                 className={`block h-4 w-4 rounded-full border transition-all duration-200 ${isActive
-                    ? "border-[var(--accent)] bg-[var(--accent)] shadow-[0_0_0_6px_rgba(176,125,98,0.25)] scale-110"
-                    : "border-[var(--border)] bg-[var(--header-footer)] group-hover:border-[var(--accent)]"
+                  ? "border-[var(--accent)] bg-[var(--accent)] shadow-[0_0_0_6px_rgba(176,125,98,0.25)] scale-110"
+                  : "border-[var(--border)] bg-[var(--header-footer)] group-hover:border-[var(--accent)]"
                   }`}
               />
               <span className="absolute left-5 hidden rounded-md bg-[var(--foreground)] px-2 py-1 text-[11px] text-[var(--background)] shadow-sm group-hover:inline">
@@ -589,7 +596,7 @@ export default function Home() {
               </button>
             </div>
             <p className="mt-4 text-sm text-[var(--muted)]">
-              {activeModal === "dev" 
+              {activeModal === "dev"
                 ? "Este projeto está em desenvolvimento ou não foi disponibilizado ainda. Para mais detalhes, entre em contato e compartilho mais alguns detalhes dentro do possível sobre a versão mais recente."
                 : "O sistema deste projeto foi temporariamente retirado do ar devido ao término do tempo de contrato de hospedagem. Se quiser saber mais detalhes técnicos sobre como ele foi construído, fique à vontade para entrar em contato!"}
             </p>
