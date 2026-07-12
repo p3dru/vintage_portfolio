@@ -22,7 +22,7 @@ const projects = [
   {
     title: "Atlas Basis (Motor de Otimização Logística 3D)",
     summary:
-      "Plataforma de orquestração logística e roteamento tático com renderização imersiva em mapas 3D. O sistema distribui rotas para múltiplas frotas utilizando clustering K-Means e soluciona algoritmos de Caixeiro Viajante (TSP) para ciclos fechados. Todo o processamento matemático complexo e integração com matrizes OSRM é isolado no client-side via Web Workers, garantindo simulações espaciais animadas de alta performance sem travar a interface.",
+      "Plataforma de orquestração logística e roteamento tático 3D. Distribui rotas para múltiplas frotas usando clustering K-Means e algoritmos TSP. Todo processamento e integração OSRM ocorrem via Web Workers (client-side), garantindo simulações de alta performance.",
     tags: ["Vue 3", "MapLibre", "OSRM", "Web Workers"],
     link: "https://atlasbasis.vercel.app/",
   },
