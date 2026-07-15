@@ -127,6 +127,10 @@ export default function Home() {
   const [activeModal, setActiveModal] = useState<"dev" | "offline" | null>(null);
 
   useEffect(() => {
+    fetch('/api/notify');
+  }, []);
+
+  useEffect(() => {
     const stored = window.localStorage.getItem("theme");
     if (stored === "dark" || stored === "light") {
       setTheme(stored);
