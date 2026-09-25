@@ -132,16 +132,61 @@ html::-webkit-scrollbar {
   border-color: var(--accent);
 }
 
-/* Mobile: avião de papel entra pela direita e pousa no canal de Email (desktop usa a cena 3D). */
-.landing-plane {
+/* Avião de papel no canal de contato (ícone nítido; o nariz do desenho aponta para cima/direita). */
+.card-plane {
   position: absolute;
   right: 0.75rem;
   top: 0.75rem;
   width: 1.75rem;
   height: 1.75rem;
   color: var(--accent);
+  pointer-events: none;
+}
+
+/* Desktop: aparece quando a cena 3D estaciona no card (data-parked = direção do voo). */
+.parked-plane {
   opacity: 0;
-  transform: translate(70vw, -140px) rotate(-25deg);
+  transform: scale(0.7);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+[data-parked] .parked-plane {
+  opacity: 1;
+  transform: none;
+  animation: plane-idle 3s ease-in-out infinite;
+}
+
+[data-parked="left"] .parked-plane {
+  transform: scaleX(-1);
+  animation-name: plane-idle-left;
+}
+
+[data-parked] {
+  border-color: var(--accent);
+}
+
+@keyframes plane-idle {
+  50% { transform: translateY(-3px) rotate(-4deg); }
+}
+
+@keyframes plane-idle-left {
+  0%, 100% { transform: scaleX(-1); }
+  50% { transform: scaleX(-1) translateY(-3px) rotate(-4deg); }
+}
+
+/* Cena 3D só existe a partir de 1024px: acima disso vale o ícone estacionado, abaixo o do pouso. */
+@media (max-width: 1023.98px) {
+  .parked-plane { display: none; }
+}
+
+@media (min-width: 1024px) {
+  .landing-plane { display: none; }
+}
+
+/* Mobile (sem cena 3D): entra pela direita, com o nariz para a esquerda, e pousa no Email. */
+.landing-plane {
+  opacity: 0;
+  transform: translate(70vw, -140px) scaleX(-1) rotate(-25deg);
 }
 
 .landing-plane.is-landing {
@@ -149,15 +194,19 @@ html::-webkit-scrollbar {
 }
 
 @keyframes plane-land {
-  0% { opacity: 0; transform: translate(70vw, -140px) rotate(-25deg); }
+  0% { opacity: 0; transform: translate(70vw, -140px) scaleX(-1) rotate(-25deg); }
   20% { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0) scaleX(-1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  [data-parked] .parked-plane {
+    animation: none;
+  }
+
   .landing-plane.is-landing {
     animation: none;
     opacity: 1;
-    transform: none;
+    transform: scaleX(-1);
   }
 }

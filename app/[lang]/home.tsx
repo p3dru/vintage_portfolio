@@ -39,7 +39,7 @@ const tagClass =
 const outlineButtonClass =
   "rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]";
 
-// Avião do mobile (sem cena 3D): entra pela direita e pousa no canal de Email.
+// Ícone do avião no canal: no desktop, onde a cena 3D estaciona; no mobile, pousa sozinho.
 function PaperPlane({ className }: { className: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -119,7 +119,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
 
       const contactTop = document.getElementById("contato")?.getBoundingClientRect().top ?? Infinity;
       const remainingScroll = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
-      const flight = flightProgress(contactTop, window.innerHeight * 0.85, contactTop - remainingScroll);
+      const flight = flightProgress(contactTop, window.innerHeight, contactTop - remainingScroll);
       flightRef.current.progress = flight;
       flightRef.current.target ??= channelRefs.current[0];
       setLanded(flightPhases(flight).travel >= LANDED_AT);
@@ -536,8 +536,12 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                 <span className="break-all text-lg font-semibold text-[var(--foreground)]">
                   {method.value}
                 </span>
-                {index === 0 && !isDesktop && (
-                  <PaperPlane className={`landing-plane ${contactReached ? "is-landing" : ""}`} />
+                {/* Os dois ícones sempre no HTML; o CSS escolhe por largura (sem troca na hidratação). */}
+                <PaperPlane className="card-plane parked-plane" />
+                {index === 0 && (
+                  <PaperPlane
+                    className={`card-plane landing-plane ${contactReached ? "is-landing" : ""}`}
+                  />
                 )}
               </a>
             ))}
