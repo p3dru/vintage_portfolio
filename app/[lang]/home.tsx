@@ -11,8 +11,13 @@ import type { Flight } from "./scene/section-scene";
 import { DESKTOP_QUERY, useMediaQuery } from "./media";
 import { useTheme } from "./theme";
 
-// three.js só é baixado no desktop, depois da primeira pintura.
-const SectionScene = dynamic(() => import("./scene/section-scene"), { ssr: false });
+// three.js só é baixado no desktop. O download começa assim que este módulo carrega,
+// em paralelo com a hidratação, em vez de esperar a página ficar interativa.
+const loadSectionScene = () => import("./scene/section-scene");
+if (typeof window !== "undefined" && window.matchMedia(DESKTOP_QUERY).matches) {
+  void loadSectionScene();
+}
+const SectionScene = dynamic(loadSectionScene, { ssr: false });
 
 
 const EMAIL = "p3droon3@gmail.com";

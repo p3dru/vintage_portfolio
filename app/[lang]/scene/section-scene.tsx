@@ -34,6 +34,11 @@ const nearestTo = (from: number, angle: number) =>
 const readAccent = () =>
   getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#b07d62";
 
+// Aproxima `current` de `target` com constante de tempo `tau` (ms): mesma velocidade a
+// 60 ou 144 Hz, e sem "degrau" quando um quadro atrasa.
+const approach = (current: number, target: number, tau: number, dt: number) =>
+  current + (target - current) * (1 - Math.exp(-dt / tau));
+
 // Ponto da curva de Bézier quadrática S → C → E.
 const bezier = (s: number, c: number, e: number, t: number) =>
   (1 - t) * (1 - t) * s + 2 * (1 - t) * t * c + t * t * e;
@@ -122,7 +127,27 @@ export default function SectionScene({
       attributeFilter: ["data-theme"],
     });
 
+    // Layout lido só quando muda (resize, fontes, conteúdo), nunca dentro do quadro:
+    // ler posições logo após a home escrever o estilo dos pontos forçaria reflow a cada quadro.
     const main = document.querySelector("main");
+    let mainRight = 0;
+    const cardBoxes = new Map<HTMLElement, { right: number; top: number }>();
+    const measure = () => {
+      mainRight = main?.getBoundingClientRect().right ?? window.innerWidth * 0.8;
+      cardBoxes.clear();
+    };
+    const cardBox = (card: HTMLElement) => {
+      let box = cardBoxes.get(card);
+      if (!box) {
+        const rect = card.getBoundingClientRect();
+        box = { right: rect.right, top: rect.top + window.scrollY };
+        cardBoxes.set(card, box);
+      }
+      return box;
+    };
+    measure();
+    const layoutObserver = new ResizeObserver(measure);
+    layoutObserver.observe(document.body);
     let shown = progressRef.current ?? 0;
     let lastShown = -1;
     let flightClock = 0; // 0 = na lateral, 1 = pousado; anda FLIGHT_MS por percurso
@@ -142,6 +167,10 @@ export default function SectionScene({
     };
     const position = { x: NaN, y: NaN };
 
+    // Compila os shaders antes do primeiro quadro e só revela a cena já desenhada.
+    renderer.compile(scene, camera);
+    let revealed = false;
+
     let frame = requestAnimationFrame(function tick(time) {
       const flight = flightRef.current ?? { armed: false, target: null };
       const dt = lastTime < 0 ? 0 : Math.min(64, time - lastTime);
@@ -155,18 +184,18 @@ export default function SectionScene({
       // Movimento reduzido: troca direta de forma e de lugar, sem morph, voo nem giro.
       const morphTarget = Math.max(progressRef.current ?? 0, shapes.length - 2 + form);
       const target = flightClock > 0 ? morphTarget : (progressRef.current ?? 0);
-      shown = reducedMotion ? Math.round(target) : shown + (target - shown) * 0.08;
+      shown = reducedMotion ? Math.round(target) : approach(shown, target, 200, dt);
       const t = smoothstep(travel);
       const landed = travel >= 1;
 
       // Lateral: centro do espaço entre o fim do conteúdo e a borda direita.
-      const railX = ((main?.getBoundingClientRect().right ?? width * 0.8) + width) / 2;
+      const railX = (mainRight + width) / 2;
       const railY = height / 2;
       const railRadius = Math.min((width - railX) * 0.6, height * 0.2, 150);
-      const card = flight.target?.getBoundingClientRect();
-      // Pousa no canto superior direito do card, onde fica o ícone .card-plane.
+      const card = flight.target ? cardBox(flight.target) : null;
+      // Pousa no canto superior direito do card (posição na tela = documento − scroll).
       const landX = card ? card.right - ICON_INSET : railX;
-      const landY = card ? card.top + ICON_INSET : railY;
+      const landY = card ? card.top - window.scrollY + ICON_INSET : railY;
       const controlX = (railX + landX) / 2;
       const controlY = Math.min(railY, landY) - height * 0.25;
 
@@ -203,9 +232,9 @@ export default function SectionScene({
         const goalX = bezier(railX, controlX, landX, t);
         const goalY = bezier(railY, controlY, landY, t);
         // Primeiro quadro (ou movimento reduzido): vai direto; depois, desliza até o alvo.
-        const ease = reducedMotion ? 1 : 0.2;
-        position.x = Number.isNaN(position.x) ? goalX : position.x + (goalX - position.x) * ease;
-        position.y = Number.isNaN(position.y) ? goalY : position.y + (goalY - position.y) * ease;
+        const first = reducedMotion || Number.isNaN(position.x);
+        position.x = first ? goalX : approach(position.x, goalX, 75, dt);
+        position.y = first ? goalY : approach(position.y, goalY, 75, dt);
         slopeX = bezierSlope(railX, controlX, landX, t);
         slopeY = bezierSlope(railY, controlY, landY, t);
         // Arremetida: no fim do trajeto o nariz levanta, como um avião de papel perdendo velocidade.
@@ -218,7 +247,7 @@ export default function SectionScene({
       // Pousado: o avião 3D se "dobra" no contorno plano do avião de papel, de frente para a
       // câmera; ao sair (novo salto ou scroll para cima), desdobra de volta.
       const resting = landed && !hop;
-      settle = reducedMotion ? Number(resting) : settle + (Number(resting) - settle) * 0.09;
+      settle = reducedMotion ? Number(resting) : approach(settle, Number(resting), 180, dt);
       const s = smoothstep(settle);
       park(resting && settle > 0.9 ? flight.target : null);
 
@@ -254,16 +283,16 @@ export default function SectionScene({
 
       if (flightClock <= 0) {
         // Lateral: formas girando devagar.
-        if (!reducedMotion) spin += 0.003;
+        if (!reducedMotion) spin += dt * 0.00018;
         points.rotation.set(0, spin, 0);
       } else if (travel <= 0) {
         // Virando avião na lateral: o giro desacelera até o nariz apontar para a esquerda,
         // sempre no mesmo sentido, sem meia-volta.
-        spin = reducedMotion ? LEFT : spin + (forwardTo(spin, LEFT) - spin) * 0.05;
+        spin = reducedMotion ? LEFT : approach(spin, forwardTo(spin, LEFT), 320, dt);
         points.rotation.set(0, spin, 0);
       } else {
         // Em voo o nariz segue a tangente da curva, inclinando no meio e nivelando ao pousar.
-        spin = reducedMotion ? facing : spin + (nearestTo(spin, facing) - spin) * 0.12;
+        spin = reducedMotion ? facing : approach(spin, nearestTo(spin, facing), 130, dt);
         const heading = Math.atan2(-slopeY, slopeX) - facing;
         const wrapped = Math.atan2(Math.sin(heading), Math.cos(heading)) * headingWeight;
         // Nariz para cima: rotação negativa com o nariz à esquerda, positiva à direita.
@@ -284,6 +313,10 @@ export default function SectionScene({
       }
 
       renderer.render(scene, camera);
+      if (!revealed) {
+        revealed = true;
+        container.style.opacity = "1";
+      }
       frame = requestAnimationFrame(tick);
     });
 
@@ -291,6 +324,7 @@ export default function SectionScene({
       cancelAnimationFrame(frame);
       park(null);
       window.removeEventListener("resize", resize);
+      layoutObserver.disconnect();
       themeObserver.disconnect();
       geometry.dispose();
       material.dispose();
@@ -301,5 +335,11 @@ export default function SectionScene({
     };
   }, [progressRef, flightRef]);
 
-  return <div ref={containerRef} className="h-full w-full" aria-hidden="true" />;
+  return (
+    <div
+      ref={containerRef}
+      className="h-full w-full opacity-0 transition-opacity duration-700"
+      aria-hidden="true"
+    />
+  );
 }
