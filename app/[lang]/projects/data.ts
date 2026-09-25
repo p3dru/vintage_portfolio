@@ -23,7 +23,7 @@ export type Project = {
   motif: Motif;
 } & Record<Locale, ProjectText>;
 
-// Afirmações marcadas com [confirmar] foram inferidas e aguardam validação do autor.
+// Afirmações marcadas com foram inferidas e aguardam validação do autor.
 export const projects: Project[] = [
   {
     slug: "disasterscan",
@@ -37,7 +37,7 @@ export const projects: Project[] = [
         "Plataforma para monitoramento, previsão e mitigação de riscos ambientais, integrando múltiplas fontes de dados para apoiar decisões estratégicas.",
       context:
         "Riscos ambientais envolvem dados espalhados em fontes diferentes, com formatos e ritmos de atualização distintos. O produto reúne essas fontes em indicadores, alertas e painéis que ajudam a decidir antes do problema acontecer.",
-      role: "Atuo no desenvolvimento full-stack e na análise de requisitos: do discovery com usuários à especificação e implementação dos módulos. [confirmar]",
+      role: "Atuo no desenvolvimento full-stack e na análise de requisitos: descoberta de fontes de dados e indicadores, estudos de caso, especificação e implementação dos módulos, incorporando novas adequações que surgem em entrevistas e rodadas técnicas.",
       decisions: [
         {
           title: "Discovery documentado antes do código",
@@ -52,8 +52,8 @@ export const projects: Project[] = [
           why: "Mudanças de banco passam por migrações versionadas e cada entrega é homologada localmente antes de produção, reduzindo surpresas no ambiente real.",
         },
         {
-          title: "Governança para desenvolvimento com IA",
-          why: "Planos de implementação, regras para agentes e revisões ficam no repositório. A IA acelera a execução, mas trabalha dentro de limites escritos.",
+          title: "Documentação versionada em repositório próprio",
+          why: "Requisitos, planos de implementação e decisões vivem em um repositório de documentação separado e versionado, com histórico de cada mudança. As regras para agentes de IA ficam ali também: a IA acelera a execução, mas trabalha dentro de limites escritos.",
         },
       ],
       status:
@@ -65,7 +65,7 @@ export const projects: Project[] = [
         "Platform for monitoring, forecasting and mitigating environmental risks, integrating multiple data sources to support strategic decisions.",
       context:
         "Environmental risk data is scattered across sources with different formats and update cycles. The product brings those sources together into indicators, alerts and dashboards that help decide before the problem happens.",
-      role: "I work on full-stack development and requirements analysis: from discovery with users to specifying and implementing modules. [confirmar]",
+      role: "I work on full-stack development and requirements analysis: discovering data sources and indicators, case studies, specifying and implementing modules, and incorporating new adjustments that come up in interviews and technical rounds.",
       decisions: [
         {
           title: "Documented discovery before code",
@@ -80,8 +80,8 @@ export const projects: Project[] = [
           why: "Database changes go through versioned migrations and every delivery is validated locally before production, reducing surprises in the real environment.",
         },
         {
-          title: "Governance for AI-assisted development",
-          why: "Implementation plans, agent rules and reviews live in the repository. AI speeds up execution but works within written limits.",
+          title: "Versioned documentation in its own repository",
+          why: "Requirements, implementation plans and decisions live in a separate, versioned documentation repository, with a history of every change. Rules for AI agents live there too: AI speeds up execution but works within written limits.",
         },
       ],
       status: "In pre-release, with new modules evolving. Business rules are intentionally left out of this page.",
@@ -99,7 +99,7 @@ export const projects: Project[] = [
         "Motor de otimização logística com roteamento tático em mapa 3D, distribuindo rotas entre múltiplas frotas.",
       context:
         "Roteirizar entregas, coletas ou equipes de campo é um problema clássico (VRP/TSP) que cresce rápido com o número de pontos. O Atlas Basis é uma base genérica para esse tipo de solução, com visualização 3D e comparação de resultados.",
-      role: "Concepção, arquitetura e desenvolvimento do projeto. [confirmar]",
+      role: "Concepção, arquitetura e desenvolvimento do projeto.",
       decisions: [
         {
           title: "Otimização em Web Workers",
@@ -126,7 +126,7 @@ export const projects: Project[] = [
         "Logistics optimization engine with tactical routing on a 3D map, distributing routes across multiple fleets.",
       context:
         "Routing deliveries, pickups or field teams is a classic problem (VRP/TSP) that grows fast with the number of stops. Atlas Basis is a generic foundation for this kind of solution, with 3D visualization and result comparison.",
-      role: "Concept, architecture and development of the project. [confirmar]",
+      role: "Concept, architecture and development of the project.",
       decisions: [
         {
           title: "Optimization in Web Workers",
@@ -221,7 +221,7 @@ export const projects: Project[] = [
         "Plataforma de tratamento visual de dados que roda inteira no navegador, sem backend e sem código.",
       context:
         "Limpar uma planilha costuma exigir scripts ou enviar dados sensíveis para um serviço externo. O LibreETL faz diagnóstico, limpeza, transformação e junção de datasets localmente, sem que o arquivo saia da máquina.",
-      role: "Concepção e desenvolvimento do projeto. [confirmar]",
+      role: "Concepção e desenvolvimento do projeto, a partir de problemas que observei no meu dia a dia de trabalho.",
       decisions: [
         {
           title: "Zero-backend como requisito de privacidade",
@@ -248,7 +248,7 @@ export const projects: Project[] = [
         "Visual data preparation platform that runs entirely in the browser, with no backend and no code.",
       context:
         "Cleaning a spreadsheet usually requires scripts or sending sensitive data to an external service. LibreETL diagnoses, cleans, transforms and joins datasets locally, without the file ever leaving the machine.",
-      role: "Concept and development of the project. [confirmar]",
+      role: "Concept and development of the project, born from problems I observed in my day-to-day work.",
       decisions: [
         {
           title: "Zero-backend as a privacy requirement",
@@ -280,20 +280,20 @@ export const projects: Project[] = [
       summary:
         "Sistema de visão computacional para segmentar e classificar grãos agrícolas em defeituosos, danificados e saudáveis.",
       context:
-        "A classificação de grãos ainda depende muito de inspeção visual manual, lenta e sujeita a variação entre avaliadores. O sistema propõe apoiar essa etapa com IA, do registro da imagem ao resultado. [confirmar]",
-      role: "Pipeline de imagens, treinamento e avaliação do modelo, e integração com backend e app. [confirmar]",
+        "A classificação de grãos ainda depende muito de inspeção visual manual, lenta e sujeita a variação entre avaliadores. O sistema propõe apoiar essa etapa com IA, do registro da imagem ao resultado.",
+      role: "Pipeline de imagens, treinamento e avaliação do modelo, e integração com backend e app.",
       decisions: [
         {
           title: "Segmentar antes de classificar",
-          why: "Isolar cada grão na imagem permite classificar individualmente e contar por categoria, em vez de dar um único rótulo para a amostra inteira. [confirmar]",
+          why: "Isolar cada grão na imagem permite classificar individualmente e contar por categoria, em vez de dar um único rótulo para a amostra inteira.",
         },
         {
           title: "App mobile para uso em campo",
-          why: "A captura acontece onde o grão está. Um app Flutter leva o fluxo para o celular sem depender de equipamento dedicado. [confirmar]",
+          why: "A captura acontece onde o grão está. Um app Flutter leva o fluxo para o celular sem depender de equipamento dedicado.",
         },
         {
           title: "Resultados persistidos para análise",
-          why: "Cada avaliação fica registrada em PostgreSQL, permitindo acompanhar desempenho do modelo e histórico das amostras. [confirmar]",
+          why: "Cada avaliação fica registrada em PostgreSQL, permitindo acompanhar desempenho do modelo e histórico das amostras.",
         },
       ],
       status: "Em desenvolvimento; ainda não disponibilizado publicamente.",
@@ -303,20 +303,20 @@ export const projects: Project[] = [
       summary:
         "Computer vision system that segments and classifies agricultural grains as defective, damaged or healthy.",
       context:
-        "Grain grading still relies heavily on manual visual inspection, which is slow and varies between evaluators. The system aims to support this step with AI, from capturing the image to the result. [confirmar]",
-      role: "Image pipeline, model training and evaluation, and integration with the backend and app. [confirmar]",
+        "Grain grading still relies heavily on manual visual inspection, which is slow and varies between evaluators. The system aims to support this step with AI, from capturing the image to the result.",
+      role: "Image pipeline, model training and evaluation, and integration with the backend and app.",
       decisions: [
         {
           title: "Segment before classifying",
-          why: "Isolating each grain in the image allows classifying them individually and counting per category, instead of a single label for the whole sample. [confirmar]",
+          why: "Isolating each grain in the image allows classifying them individually and counting per category, instead of a single label for the whole sample.",
         },
         {
           title: "Mobile app for field use",
-          why: "Capture happens where the grain is. A Flutter app brings the flow to a phone without dedicated equipment. [confirmar]",
+          why: "Capture happens where the grain is. A Flutter app brings the flow to a phone without dedicated equipment.",
         },
         {
           title: "Persisted results for analysis",
-          why: "Each evaluation is stored in PostgreSQL, making it possible to track model performance and sample history. [confirmar]",
+          why: "Each evaluation is stored in PostgreSQL, making it possible to track model performance and sample history.",
         },
       ],
       status: "In development; not publicly released yet.",
@@ -333,19 +333,19 @@ export const projects: Project[] = [
         "Site institucional para divulgação acadêmica de um programa de pós-graduação, com painel administrativo e suporte a PT/EN.",
       context:
         "Programas de pós-graduação precisam publicar editais, documentos e notícias com frequência, para públicos nacionais e estrangeiros. O site organiza esse conteúdo e o torna fácil de manter.",
-      role: "Levantamento de requisitos com o programa e desenvolvimento full-stack. [confirmar]",
+      role: "Levantamento de requisitos com o programa e desenvolvimento full-stack.",
       decisions: [
         {
           title: "Painel administrativo próprio",
-          why: "A equipe do programa publica e atualiza conteúdo sem depender de um desenvolvedor para cada mudança. [confirmar]",
+          why: "A equipe do programa publica e atualiza conteúdo sem depender de um desenvolvedor para cada mudança.",
         },
         {
           title: "Internacionalização desde o início",
-          why: "PT e EN foram previstos na estrutura, e não adicionados depois, o que evita retrabalho em rotas e conteúdo. [confirmar]",
+          why: "PT e EN foram previstos na estrutura, e não adicionados depois, o que evita retrabalho em rotas e conteúdo.",
         },
         {
           title: "API separada do frontend",
-          why: "NestJS e React desacoplados permitem evoluir interface e regras de conteúdo de forma independente. [confirmar]",
+          why: "NestJS e React desacoplados permitem evoluir interface e regras de conteúdo de forma independente.",
         },
       ],
       status: "Fora do ar após o fim do contrato de hospedagem.",
@@ -356,19 +356,19 @@ export const projects: Project[] = [
         "Institutional website for a graduate program's academic outreach, with an admin panel and PT/EN support.",
       context:
         "Graduate programs need to publish calls, documents and news frequently, for both national and international audiences. The site organizes this content and keeps it easy to maintain.",
-      role: "Requirements gathering with the program and full-stack development. [confirmar]",
+      role: "Requirements gathering with the program and full-stack development.",
       decisions: [
         {
           title: "Dedicated admin panel",
-          why: "The program's team publishes and updates content without needing a developer for every change. [confirmar]",
+          why: "The program's team publishes and updates content without needing a developer for every change.",
         },
         {
           title: "Internationalization from day one",
-          why: "PT and EN were built into the structure rather than added later, avoiding rework in routes and content. [confirmar]",
+          why: "PT and EN were built into the structure rather than added later, avoiding rework in routes and content.",
         },
         {
           title: "API separate from the frontend",
-          why: "Decoupled NestJS and React let the interface and content rules evolve independently. [confirmar]",
+          why: "Decoupled NestJS and React let the interface and content rules evolve independently.",
         },
       ],
       status: "Offline after the hosting contract ended.",
