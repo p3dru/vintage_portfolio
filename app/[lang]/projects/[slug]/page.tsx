@@ -71,8 +71,9 @@ export default async function ProjectPage({ params }: Props) {
       </header>
 
       <main className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 md:px-6 md:py-14 lg:px-14">
-        <section className="grid gap-8 rounded-3xl border border-t-4 border-[var(--border)] border-t-[var(--accent)] bg-[var(--section)] p-5 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:grid-cols-[1fr_200px] md:items-center md:p-12">
+        <section className="grid gap-8 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:grid-cols-[1fr_200px] md:items-center md:p-12">
           <div className="space-y-5">
+            <span className="block h-1 w-16 rounded-full bg-[var(--accent)]" aria-hidden="true" />
             <p className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
               <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
               {projectsDict.statuses[project.status]}
