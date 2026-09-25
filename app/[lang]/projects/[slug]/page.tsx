@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getDictionary, hasLocale, locales } from "../../dictionaries";
 import { ThemeButton } from "../../theme";
 import { getProject, projects } from "../data";
-import ProjectMotif from "../motif";
+import ProjectVisual from "../project-visual";
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
@@ -43,7 +43,7 @@ export default async function ProjectPage({ params }: Props) {
   const next = projects[(projects.indexOf(project) + 1) % projects.length];
 
   return (
-    <div data-project={project.slug} className="min-h-screen text-[var(--foreground)]">
+    <div data-project={project.slug} data-project-page className="min-h-screen text-[var(--foreground)]">
       <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 md:px-8">
           <Link
@@ -71,11 +71,11 @@ export default async function ProjectPage({ params }: Props) {
       </header>
 
       <main className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 md:px-6 md:py-14 lg:px-14">
-        <section className="grid gap-8 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:grid-cols-[1fr_200px] md:items-center md:p-12">
+        <section className="grid gap-8 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:grid-cols-[1fr_224px] md:items-center md:p-12">
           <div className="space-y-5">
-            <span className="block h-1 w-16 rounded-full bg-[var(--accent)]" aria-hidden="true" />
+            <span className="block h-1 w-16 rounded-full bg-[var(--draw)]" aria-hidden="true" />
             <p className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
-              <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
+              <span className="h-2 w-2 rounded-full bg-[var(--draw)]" />
               {projectsDict.statuses[project.status]}
             </p>
             <h1 className="text-4xl font-semibold leading-tight md:text-5xl">{text.title}</h1>
@@ -85,7 +85,7 @@ export default async function ProjectPage({ params }: Props) {
               {project.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border-2 border-[var(--accent)] px-3 py-1 text-xs text-[var(--foreground)]"
+                  className="rounded-full border-2 border-[var(--draw)] px-3 py-1 text-xs text-[var(--foreground)]"
                 >
                   {tag}
                 </span>
@@ -102,8 +102,8 @@ export default async function ProjectPage({ params }: Props) {
               </a>
             )}
           </div>
-          <div className="mx-auto h-24 w-24 md:h-48 md:w-48">
-            <ProjectMotif motif={project.motif} />
+          <div className="mx-auto h-24 w-24 md:h-56 md:w-56">
+            <ProjectVisual motif={project.motif} />
           </div>
         </section>
 

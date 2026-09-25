@@ -117,7 +117,7 @@ export default function ProjectMotif({ motif }: { motif: Motif }) {
   return (
     <svg
       viewBox="0 0 200 200"
-      className="h-full w-full text-[var(--accent)]"
+      className="h-full w-full text-[var(--draw)]"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"

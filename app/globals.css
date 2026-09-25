@@ -98,22 +98,46 @@ html::-webkit-scrollbar {
   font-family: "Krona One", sans-serif;
 }
 
-/* Personalidade por projeto: só o destaque muda, a base vintage permanece. */
-[data-project="disasterscan"] { --accent: #b5452f; --accent-soft: #efc2b3; }
-[data-project="atlas-basis"] { --accent: #2f6f7e; --accent-soft: #b9d6db; }
-[data-project="mini-lakehouse-agro"] { --accent: #6b7a3a; --accent-soft: #d3d7b0; }
-[data-project="libreetl"] { --accent: #2f7d62; --accent-soft: #bfe1d2; }
-[data-project="grain-classification"] { --accent: #a57a1f; --accent-soft: #ecd9a6; }
-[data-project="ppgzt"] { --accent: #8a2f45; --accent-soft: #e6bcc6; }
-[data-project="ai-buildcore"] { --accent: #6a4c93; --accent-soft: #d6c9ea; }
+/* Personalidade por projeto, a partir das cores reais de cada produto.
+   --vivid: a cor original (neon em vários casos), usada em desenhos, bordas e 3D.
+   --accent: a mesma matiz com contraste para texto e botões (escurecida no tema claro). */
+[data-project="disasterscan"] { --vivid: #ff5500; --accent: #b33c00; --accent-soft: #f6c9b0; }
+[data-project="atlas-basis"] { --vivid: #a3e635; --accent: #3f6212; --accent-soft: #d9f0a8; }
+[data-project="mini-lakehouse-agro"] { --vivid: #ccff00; --accent: #4f6300; --accent-soft: #e4f59a; }
+[data-project="libreetl"] { --vivid: #6366f1; --accent: #4338ca; --accent-soft: #c7c8f7; }
+[data-project="grain-classification"] { --vivid: #e8c35f; --accent: #8a6414; --accent-soft: #ecd9a6; }
+[data-project="ppgzt"] { --vivid: #c2476a; --accent: #8a2f45; --accent-soft: #e6bcc6; }
+[data-project="ai-buildcore"] { --vivid: #3186ff; --accent: #1f5fcc; --accent-soft: #c3d9fb; }
 
-[data-theme="dark"] [data-project="disasterscan"] { --accent: #f0a35e; --accent-soft: #8a5a45; }
-[data-theme="dark"] [data-project="atlas-basis"] { --accent: #7cc4d1; --accent-soft: #3d6770; }
-[data-theme="dark"] [data-project="mini-lakehouse-agro"] { --accent: #b8c47a; --accent-soft: #5d6440; }
-[data-theme="dark"] [data-project="libreetl"] { --accent: #86d4b4; --accent-soft: #3f6f5f; }
+[data-theme="dark"] [data-project="disasterscan"] { --accent: #ff7a33; --accent-soft: #6b3a24; }
+[data-theme="dark"] [data-project="atlas-basis"] { --accent: #a3e635; --accent-soft: #3f5a1a; }
+[data-theme="dark"] [data-project="mini-lakehouse-agro"] { --accent: #ccff00; --accent-soft: #4f5c14; }
+[data-theme="dark"] [data-project="libreetl"] { --accent: #818cf8; --accent-soft: #3b3d7a; }
 [data-theme="dark"] [data-project="grain-classification"] { --accent: #e8c35f; --accent-soft: #7d6a3a; }
 [data-theme="dark"] [data-project="ppgzt"] { --accent: #e08aa0; --accent-soft: #6e3a48; }
-[data-theme="dark"] [data-project="ai-buildcore"] { --accent: #b9a2e6; --accent-soft: #5a4c73; }
+[data-theme="dark"] [data-project="ai-buildcore"] { --accent: #6fa8ff; --accent-soft: #2a4a7a; }
+
+/* Traço dos desenhos: no claro, o neon puro some no bege; mistura com o tom de contraste. */
+[data-project] { --draw: color-mix(in srgb, var(--vivid) 55%, var(--accent)); }
+[data-theme="dark"] [data-project] { --draw: var(--vivid); }
+
+/* Página do projeto: superfícies levemente tingidas com a cor do produto, mesma estrutura. */
+[data-project-page] {
+  --background: color-mix(in srgb, var(--vivid) 5%, #f2e9e4);
+  --header-footer: color-mix(in srgb, var(--vivid) 4%, #f7f1ea);
+  --section: color-mix(in srgb, var(--vivid) 7%, #ede3d7);
+  --card: color-mix(in srgb, var(--vivid) 11%, #dcc7b4);
+  --border: color-mix(in srgb, var(--vivid) 28%, #d8c3a5);
+  background: var(--background);
+}
+
+[data-theme="dark"] [data-project-page] {
+  --background: color-mix(in srgb, var(--vivid) 5%, #111015);
+  --header-footer: color-mix(in srgb, var(--vivid) 5%, #1a1820);
+  --section: color-mix(in srgb, var(--vivid) 7%, #1f1c25);
+  --card: color-mix(in srgb, var(--vivid) 10%, #26212d);
+  --border: color-mix(in srgb, var(--vivid) 30%, #26232d);
+}
 
 /* Ponto de seção: --w (0..1) vem do progresso do scroll e interpola a cor em sincronia com a cena 3D. */
 .section-dot {

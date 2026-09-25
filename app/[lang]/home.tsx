@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,17 +8,12 @@ import type { Dictionary, Locale } from "./dictionaries";
 import { projects as projectList } from "./projects/data";
 import { flightPhases, flightProgress, LANDED_AT, sectionProgress } from "./scene/progress";
 import type { Flight } from "./scene/section-scene";
+import { DESKTOP_QUERY, useMediaQuery } from "./media";
 import { useTheme } from "./theme";
 
 // three.js só é baixado no desktop, depois da primeira pintura.
 const SectionScene = dynamic(() => import("./scene/section-scene"), { ssr: false });
 
-const DESKTOP_QUERY = "(min-width: 1024px)";
-const subscribeDesktop = (onChange: () => void) => {
-  const query = window.matchMedia(DESKTOP_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-};
 
 const EMAIL = "p3droon3@gmail.com";
 const LINKEDIN = "https://www.linkedin.com/in/dev-pedro/";
@@ -80,11 +75,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
   const { header, nav, hero, projects, foundations, ai, about, contact, footer } = dict;
   const otherLang: Locale = lang === "pt" ? "en" : "pt";
 
-  const isDesktop = useSyncExternalStore(
-    subscribeDesktop,
-    () => window.matchMedia(DESKTOP_QUERY).matches,
-    () => false
-  );
+  const isDesktop = useMediaQuery(DESKTOP_QUERY);
   // Progresso contínuo entre seções (0..n-1), compartilhado com a cena 3D sem re-render.
   const progressRef = useRef(0);
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
