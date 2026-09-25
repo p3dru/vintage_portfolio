@@ -207,7 +207,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
         )}
       </header>
 
-      <div className="fixed left-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 lg:flex">
+      <div className="fixed left-[calc(var(--gutter)/2)] top-1/2 z-30 hidden -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4 lg:flex">
         {nav.map((link, index) => (
           <a
             key={link.id}
@@ -230,12 +230,12 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
       </div>
 
       {isDesktop && (
-        <div className="pointer-events-none fixed right-0 top-1/2 z-10 h-[min(70vh,560px)] w-[var(--rail)] -translate-y-1/2">
+        <div className="pointer-events-none fixed right-0 top-1/2 z-10 h-[min(70vh,560px)] w-[var(--gutter)] -translate-y-1/2">
           <SectionScene progressRef={progressRef} />
         </div>
       )}
 
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-10 md:px-6 md:py-14 lg:max-w-[min(72rem,calc(100vw-2*var(--rail)))] lg:px-8">
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-10 md:px-6 md:py-14 lg:max-w-[var(--content)] lg:px-0">
         <section
           id="inicio"
           className="anchor-section grid gap-8 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:p-12"
@@ -312,7 +312,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
             </a>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2">
             {projectList.map((project, index) => (
               <Link
                 key={project.slug}
@@ -320,7 +320,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                 className={`group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)] ${
                   // Um card sobrando na última linha ocupa a linha inteira, sem deixar buraco.
                   index === projectList.length - 1 && projectList.length % 2 === 1 ? "md:col-span-2" : ""
-                } ${index === projectList.length - 1 && projectList.length % 3 === 1 ? "2xl:col-span-3" : ""}`}
+                }`}
                 href={`/${lang}/projects/${project.slug}`}
               >
                 <div className="space-y-3">
@@ -393,9 +393,9 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
             <p className="text-[var(--muted)]">{ai.intro}</p>
           </div>
 
-          <ol className="grid gap-3 sm:grid-cols-2 min-[1800px]:grid-cols-5">
+          <ol className="grid gap-3 sm:grid-cols-2">
             {ai.steps.map((step, index) => (
-              <li key={step.title} className={`space-y-2 ${cardClass} p-4 sm:last:col-span-2 min-[1800px]:last:col-span-1`}>
+              <li key={step.title} className={`space-y-2 ${cardClass} p-4 sm:last:col-span-2`}>
                 <span className="font-mono text-xs text-[var(--accent)]">
                   {String(index + 1).padStart(2, "0")}
                 </span>

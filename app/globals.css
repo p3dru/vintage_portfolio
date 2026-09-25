@@ -75,9 +75,10 @@ html::-webkit-scrollbar {
   }
 }
 
-/* Largura das laterais no desktop: pontos à esquerda, cena 3D à direita, conteúdo centralizado entre elas. */
+/* Desktop: coluna de conteúdo contida e duas laterais reais, pontos à esquerda e cena 3D à direita. */
 :root {
-  --rail: clamp(180px, 18vw, 300px);
+  --content: min(64rem, 100vw - 2 * clamp(200px, 22vw, 380px));
+  --gutter: calc((100vw - var(--content)) / 2);
 }
 
 /* Header + divisor de seção visíveis acima da seção ao navegar por âncora. */
