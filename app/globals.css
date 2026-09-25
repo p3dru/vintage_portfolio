@@ -75,8 +75,14 @@ html::-webkit-scrollbar {
   }
 }
 
+/* Largura das laterais no desktop: pontos à esquerda, cena 3D à direita, conteúdo centralizado entre elas. */
+:root {
+  --rail: clamp(180px, 18vw, 300px);
+}
+
+/* Header + divisor de seção visíveis acima da seção ao navegar por âncora. */
 .anchor-section {
-  scroll-margin-top: 104px;
+  scroll-margin-top: 150px;
 }
 
 .font-ui {
@@ -123,4 +129,49 @@ html::-webkit-scrollbar {
 
 .group:hover .section-dot {
   border-color: var(--accent);
+}
+
+/* Ciclo de desenvolvimento do Contato: avião percorre o círculo e acende cada etapa ao passar. */
+.dev-cycle-plane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  offset-rotate: auto;
+  animation: cycle-fly linear infinite;
+}
+
+.cycle-dot {
+  fill: var(--header-footer);
+  stroke: var(--border);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cycle-dot 12s ease-out infinite;
+}
+
+.cycle-label {
+  fill: var(--muted);
+  animation: cycle-label 12s ease-out infinite;
+}
+
+@keyframes cycle-fly {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+@keyframes cycle-dot {
+  0%, 6% { fill: var(--accent); stroke: var(--accent); transform: scale(1.3); }
+  20%, 100% { fill: var(--header-footer); stroke: var(--border); transform: scale(1); }
+}
+
+@keyframes cycle-label {
+  0%, 6% { fill: var(--foreground); }
+  20%, 100% { fill: var(--muted); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dev-cycle-plane,
+  .cycle-dot,
+  .cycle-label {
+    animation: none;
+  }
 }
