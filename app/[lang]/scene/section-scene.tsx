@@ -14,13 +14,13 @@ import {
   WebGLRenderer,
 } from "three";
 import { flightPhases, smoothstep } from "./progress";
-import { POINT_COUNT, shapes } from "./shapes";
+import { planeLanded, POINT_COUNT, shapes } from "./shapes";
 
 export type Flight = { progress: number; target: HTMLElement | null };
 
 const TRAIL_POINTS = 64;
-const LANDED_RADIUS = 16; // px: tamanho do avião ao chegar no canal (≈ ícone do card)
-const ICON_INSET = 26; // px: centro do ícone .card-plane a partir do canto superior direito
+const LANDED_RADIUS = 16; // px: avião pousado ≈ 24px de largura
+const ICON_INSET = 26; // px: ponto de pouso a partir do canto superior direito do card
 const HOP_MS = 900; // salto em arco entre canais
 const TAU = Math.PI * 2;
 const LEFT = Math.PI; // giro com o nariz para a esquerda (0 = direita)
@@ -126,15 +126,17 @@ export default function SectionScene({
     let lastShown = -1;
     let travelShown = 0;
     let spin = 0;
+    let settle = 0;
+    let lastSettle = -1;
     let facing = LEFT;
     let parkedOn: HTMLElement | null = null;
     let hop: { fromX: number; fromY: number; start: number } | null = null;
-    // Estacionado, as partículas se dissolvem no ícone nítido do card (CSS [data-parked]).
+    // Card onde o avião assentou: recebe data-parked (destaque via CSS).
     let parkedCard: HTMLElement | null = null;
-    const park = (card: HTMLElement | null, direction: string) => {
+    const park = (card: HTMLElement | null) => {
       if (parkedCard && parkedCard !== card) parkedCard.removeAttribute("data-parked");
       parkedCard = card;
-      card?.setAttribute("data-parked", direction);
+      card?.setAttribute("data-parked", "");
     };
     const position = { x: NaN, y: NaN };
 
@@ -151,17 +153,6 @@ export default function SectionScene({
         : travelShown + (travelTarget - travelShown) * 0.05;
       const t = smoothstep(travelShown);
       const landed = travelShown > 0.99;
-
-      if (Math.abs(shown - lastShown) > 1e-4) {
-        lastShown = shown;
-        const from = Math.min(Math.floor(shown), shapes.length - 1);
-        const to = Math.min(from + 1, shapes.length - 1);
-        const k = smoothstep(shown - from);
-        const a = shapes[from];
-        const b = shapes[to];
-        for (let i = 0; i < POINT_COUNT * 3; i++) positions[i] = a[i] + (b[i] - a[i]) * k;
-        geometry.attributes.position.needsUpdate = true;
-      }
 
       // Lateral: centro do espaço entre o fim do conteúdo e a borda direita.
       const railX = ((main?.getBoundingClientRect().right ?? width * 0.8) + width) / 2;
@@ -190,6 +181,7 @@ export default function SectionScene({
       let slopeY: number;
       let bank: number;
       let headingWeight: number;
+      let flare: number;
       if (hop) {
         const h = smoothstep(Math.min(1, (time - hop.start) / HOP_MS));
         const hopControlX = (hop.fromX + landX) / 2;
@@ -198,6 +190,7 @@ export default function SectionScene({
         position.y = bezier(hop.fromY, hopControlY, landY, h);
         slopeX = bezierSlope(hop.fromX, hopControlX, landX, h);
         slopeY = bezierSlope(hop.fromY, hopControlY, landY, h);
+        flare = Math.sin(Math.PI * Math.min(1, Math.max(0, (h - 0.7) / 0.3))) * 0.3;
         bank = Math.sin(h * Math.PI) * 0.5;
         headingWeight = Math.sin(h * Math.PI);
         if (h >= 1) hop = null;
@@ -210,21 +203,49 @@ export default function SectionScene({
         position.y = Number.isNaN(position.y) ? goalY : position.y + (goalY - position.y) * ease;
         slopeX = bezierSlope(railX, controlX, landX, t);
         slopeY = bezierSlope(railY, controlY, landY, t);
+        // Arremetida: no fim do trajeto o nariz levanta, como um avião de papel perdendo velocidade.
+        flare = Math.sin(Math.PI * Math.min(1, Math.max(0, (t - 0.8) / 0.2))) * 0.35;
         bank = Math.sin(t * Math.PI) * 0.6;
         headingWeight = 1 - smoothstep(Math.min(1, t / 0.9));
         if (travelShown < 0.001) facing = LEFT;
       }
 
+      // Pousado: o avião 3D se "dobra" no contorno plano do avião de papel, de frente para a
+      // câmera; ao sair (novo salto ou scroll para cima), desdobra de volta.
       const resting = landed && !hop;
-      const fade = resting ? 0 : 0.9;
-      material.opacity = reducedMotion ? fade : material.opacity + (fade - material.opacity) * 0.15;
-      park(resting && material.opacity < 0.5 ? flight.target : null, facing === LEFT ? "left" : "right");
+      settle = reducedMotion ? Number(resting) : settle + (Number(resting) - settle) * 0.09;
+      const s = smoothstep(settle);
+      park(resting && settle > 0.9 ? flight.target : null);
+
+      if (Math.abs(shown - lastShown) > 1e-4 || Math.abs(settle - lastSettle) > 1e-4) {
+        lastShown = shown;
+        lastSettle = settle;
+        const from = Math.min(Math.floor(shown), shapes.length - 1);
+        const to = Math.min(from + 1, shapes.length - 1);
+        const k = smoothstep(shown - from);
+        const a = shapes[from];
+        const b = shapes[to];
+        for (let i = 0; i < POINT_COUNT * 3; i++) {
+          const base = a[i] + (b[i] - a[i]) * k;
+          positions[i] = base + (planeLanded[i] - base) * s;
+        }
+        geometry.attributes.position.needsUpdate = true;
+      }
+
+      // Toque: afunda 3px e comprime de leve enquanto assenta.
+      const touch = reducedMotion ? 0 : Math.sin(s * Math.PI);
 
       const unit = visibleHeight / height;
-      body.position.set((position.x - width / 2) * unit, (height / 2 - position.y) * unit, 0);
-      body.rotation.x = 0.25 + 0.35 * t;
-      points.scale.setScalar((railRadius + (LANDED_RADIUS - railRadius) * t) * unit);
-      material.size = (2.5 - t) * pixelRatio;
+      body.position.set(
+        (position.x - width / 2) * unit,
+        (height / 2 - position.y - touch * 3) * unit,
+        0
+      );
+      body.rotation.x = (0.25 + 0.35 * t) * (1 - s);
+      const radius = (railRadius + (LANDED_RADIUS - railRadius) * t) * unit;
+      points.scale.set(radius * (1 + touch * 0.06), radius * (1 - touch * 0.12), radius);
+      // Pontos finos ao assentar, para o contorno e a dobra lerem como desenho.
+      material.size = (2.5 - t - 0.5 * s) * pixelRatio;
 
       if (flight.progress <= 0) {
         // Lateral: formas girando devagar.
@@ -240,7 +261,9 @@ export default function SectionScene({
         spin = reducedMotion ? facing : spin + (nearestTo(spin, facing) - spin) * 0.12;
         const heading = Math.atan2(-slopeY, slopeX) - facing;
         const wrapped = Math.atan2(Math.sin(heading), Math.cos(heading)) * headingWeight;
-        points.rotation.set(bank, spin, wrapped);
+        // Nariz para cima: rotação negativa com o nariz à esquerda, positiva à direita.
+        const noseUp = (facing === LEFT ? -1 : 1) * flare;
+        points.rotation.set(bank * (1 - s), spin, (wrapped + noseUp) * (1 - s));
       }
 
       // Trilha tracejada do ponto de partida até o avião; some ao pousar.
@@ -261,7 +284,7 @@ export default function SectionScene({
 
     return () => {
       cancelAnimationFrame(frame);
-      park(null, "");
+      park(null);
       window.removeEventListener("resize", resize);
       themeObserver.disconnect();
       geometry.dispose();

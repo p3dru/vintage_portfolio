@@ -510,7 +510,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                 ref={(channel) => {
                   channelRefs.current[index] = channel;
                 }}
-                className={`relative flex flex-col gap-1 rounded-2xl border bg-[var(--card)] p-4 transition hover:-translate-y-[1px] ${landed && targetChannel === index
+                className={`relative flex flex-col gap-1 rounded-2xl border bg-[var(--card)] p-4 transition hover:-translate-y-[1px] ${!isDesktop && landed && targetChannel === index
                   ? "border-[var(--accent)] shadow-[0_0_0_4px_color-mix(in_srgb,var(--accent)_20%,transparent)]"
                   : "border-[var(--border)] hover:border-[var(--accent)]/60"
                   }`}
@@ -527,8 +527,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                 <span className="break-all text-lg font-semibold text-[var(--foreground)]">
                   {method.value}
                 </span>
-                {/* Os dois ícones sempre no HTML; o CSS escolhe por largura (sem troca na hidratação). */}
-                <PaperPlane className="card-plane parked-plane" />
+                {/* Mobile: ícone que pousa sozinho (no desktop quem pousa é a cena 3D). */}
                 {index === 0 && (
                   <PaperPlane
                     className={`card-plane landing-plane ${contactReached ? "is-landing" : ""}`}

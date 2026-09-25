@@ -167,42 +167,13 @@ html::-webkit-scrollbar {
   pointer-events: none;
 }
 
-/* Desktop: aparece quando a cena 3D estaciona no card (data-parked = direção do voo). */
-.parked-plane {
-  opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-
-[data-parked] .parked-plane {
-  opacity: 1;
-  transform: none;
-  animation: plane-idle 3s ease-in-out infinite;
-}
-
-[data-parked="left"] .parked-plane {
-  transform: scaleX(-1);
-  animation-name: plane-idle-left;
-}
-
+/* Desktop: card onde o avião 3D assentou. */
 [data-parked] {
   border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
-@keyframes plane-idle {
-  50% { transform: translateY(-3px) rotate(-4deg); }
-}
-
-@keyframes plane-idle-left {
-  0%, 100% { transform: scaleX(-1); }
-  50% { transform: scaleX(-1) translateY(-3px) rotate(-4deg); }
-}
-
-/* Cena 3D só existe a partir de 1024px: acima disso vale o ícone estacionado, abaixo o do pouso. */
-@media (max-width: 1023.98px) {
-  .parked-plane { display: none; }
-}
-
+/* A partir de 1024px quem pousa é a cena 3D. */
 @media (min-width: 1024px) {
   .landing-plane { display: none; }
 }
@@ -224,10 +195,6 @@ html::-webkit-scrollbar {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-parked] .parked-plane {
-    animation: none;
-  }
-
   .landing-plane.is-landing {
     animation: none;
     opacity: 1;

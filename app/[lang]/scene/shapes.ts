@@ -164,6 +164,27 @@ const plane = build(6, (i, rand) => {
 
 export const shapes = [sphere, cubes, plates, network, trail, plane];
 
+// Avião pousado: o contorno do ícone de avião de papel (viewBox 24, nariz em cima à direita),
+// achatado em z=0, com a linha da dobra e um leve preenchimento. Mesmo desenho do mobile.
+const icon = (u: number, v: number): Vec3 => [(u - 12) / 12, (12 - v) / 12, 0];
+const iconOutline: [Vec3, Vec3][] = [
+  [icon(3, 11), icon(21, 4)],
+  [icon(21, 4), icon(14, 21)],
+  [icon(14, 21), icon(11, 13)],
+  [icon(11, 13), icon(3, 11)],
+  [icon(21, 4), icon(11, 13)],
+];
+export const planeLanded = build(12, (i, rand) => {
+  if (i % 12 === 0) {
+    // Preenchimento esparso das duas abas do avião.
+    return i % 2
+      ? onTriangle(icon(3, 11), icon(21, 4), icon(11, 13), rand)
+      : onTriangle(icon(21, 4), icon(14, 21), icon(11, 13), rand);
+  }
+  const [a, b] = iconOutline[i % iconOutline.length];
+  return lerp3(a, b, rand());
+});
+
 // Formas das páginas de projeto (mesma ideia dos desenhos SVG de cada uma).
 const alertRings = build(7, (i, rand) => {
   if (i % 10 < 3) return inBall([0, 0, 0], 0.32, rand);

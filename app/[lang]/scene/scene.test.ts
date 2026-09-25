@@ -2,12 +2,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { flightPhases, flightProgress, sectionProgress } from "./progress.ts";
-import { POINT_COUNT, projectShapes, shapes } from "./shapes.ts";
+import { planeLanded, POINT_COUNT, projectShapes, shapes } from "./shapes.ts";
 
 test("uma forma por seção, todas com o mesmo número de pontos finitos e dentro do quadro", () => {
   assert.equal(shapes.length, 6);
   assert.equal(Object.keys(projectShapes).length, 7);
-  for (const shape of [...shapes, ...Object.values(projectShapes)]) {
+  for (const shape of [...shapes, ...Object.values(projectShapes), planeLanded]) {
     assert.equal(shape.length, POINT_COUNT * 3);
     for (const value of shape) {
       assert.ok(Number.isFinite(value) && Math.abs(value) <= 1.2, `fora do quadro: ${value}`);
