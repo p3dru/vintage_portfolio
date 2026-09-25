@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 const navLinks = [
@@ -123,6 +123,7 @@ const contactMethods = [
 export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [activeSection, setActiveSection] = useState<string>("inicio");
+  const [menuOpen, setMenuOpen] = useState(false);
   const year = new Date().getFullYear();
   const [activeModal, setActiveModal] = useState<"dev" | "offline" | null>(null);
 
@@ -152,7 +153,8 @@ export default function Home() {
           }
         });
       },
-      { threshold: 0.5 }
+      // Seção ativa = a que cruza a linha central da viewport (funciona para seções de qualquer altura).
+      { rootMargin: "-50% 0px -50% 0px" }
     );
 
     const sections = navLinks
@@ -170,9 +172,9 @@ export default function Home() {
   return (
     <div className="min-h-screen text-[var(--foreground)]">
       <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8">
-          <div className="flex items-center gap-3">
-            <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[var(--border)] bg-[var(--header-footer)] shadow-sm">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-4 md:px-8">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-[var(--border)] bg-[var(--header-footer)] shadow-sm">
               <Image
                 src="/avatar.png"
                 alt="Avatar de João Pedro"
@@ -186,12 +188,12 @@ export default function Home() {
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
                 João Pedro
               </span>
-              <span className="text-sm font-semibold text-[var(--foreground)]">
+              <span className="text-xs font-semibold text-[var(--foreground)] sm:text-sm">
                 Analista, Desenvolvedor e Engenheiro de Produto
               </span>
             </div>
           </div>
-          <nav className="hidden items-center gap-4 text-sm text-[var(--muted)] md:flex">
+          <nav className="hidden items-center gap-4 text-sm text-[var(--muted)] lg:flex">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -212,16 +214,55 @@ export default function Home() {
             ))}
           </nav>
           <button
-            className="hidden rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)] md:inline-flex"
+            className="hidden rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)] lg:inline-flex"
             type="button"
             onClick={toggleTheme}
           >
             {theme === "light" ? "Tema escuro" : "Tema claro"}
           </button>
+          <button
+            className="shrink-0 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)] lg:hidden"
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? "Fechar" : "Menu"}
+          </button>
         </div>
+        {menuOpen && (
+          <nav
+            id="mobile-menu"
+            className="border-t border-[var(--border)] px-4 pb-4 pt-2 lg:hidden"
+          >
+            <ul className="flex flex-col text-base">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    className={`block rounded-xl px-3 py-3 transition hover:bg-[var(--accent-soft)]/60 ${activeSection === link.href.replace("#", "")
+                      ? "font-semibold text-[var(--accent)]"
+                      : "text-[var(--foreground)]"
+                      }`}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <button
+              className="mt-2 w-full rounded-full border border-[var(--border)] px-4 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              type="button"
+              onClick={toggleTheme}
+            >
+              {theme === "light" ? "Tema escuro" : "Tema claro"}
+            </button>
+          </nav>
+        )}
       </header>
 
-      <div className="fixed left-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 md:flex">
+      <div className="fixed left-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 lg:flex">
         {navLinks.map((link) => {
           const id = link.href.replace("#", "");
           const isActive = activeSection === id;
@@ -246,13 +287,13 @@ export default function Home() {
         })}
       </div>
 
-      <main className="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-12 pb-28 md:px-6 md:py-16 md:pb-32">
-        <div className="section-wrapper flex min-h-[85vh] items-center justify-center">
+      <main className="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-10 md:px-6 md:py-14 lg:px-14">
+        <div>
           <section
             id="inicio"
-            className="anchor-section grid min-h-[70vh] gap-10 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:min-h-[75vh] md:grid-cols-2 md:p-12"
+            className="anchor-section grid gap-8 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:p-12"
           >
-            <div className="space-y-6">
+            <div className="max-w-3xl space-y-6">
               <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
                 Portfolio — v2026.1
               </p>
@@ -283,7 +324,7 @@ export default function Home() {
                 </a>
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)]">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Disponibilidade
@@ -306,7 +347,7 @@ export default function Home() {
                   React/Next.js, testes e observabilidade.
                 </p>
               </div>
-              <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] md:col-span-2">
+              <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] sm:col-span-2 lg:col-span-1">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                   Diferenciais
                 </p>
@@ -331,10 +372,10 @@ export default function Home() {
           </section>
         </div>
 
-        <div className="section-wrapper flex min-h-screen items-center justify-center">
+        <div>
           <section
             id="projetos"
-            className="anchor-section min-h-[75vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-6 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:p-8"
+            className="anchor-section space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:p-8"
           >
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
@@ -358,7 +399,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project) => {
                 const isInDev =
                   project.title.toLowerCase().includes("classificação de grãos");
@@ -417,10 +458,10 @@ export default function Home() {
           </section>
         </div>
 
-        <div className="section-wrapper flex min-h-screen items-center justify-center">
+        <div>
           <section
             id="skills"
-            className="anchor-section min-h-[70vh] space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.2)]"
+            className="anchor-section space-y-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 md:p-8 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.2)]"
           >
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
@@ -456,7 +497,7 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="grid gap-3 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               {tools.map((tool) => (
                 <div
                   key={tool}
@@ -469,10 +510,10 @@ export default function Home() {
           </section>
         </div>
 
-        <div className="section-wrapper flex min-h-screen items-center justify-center">
+        <div>
           <section
             id="sobre"
-            className="anchor-section grid min-h-[75vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:grid-cols-3"
+            className="anchor-section grid gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 md:p-8 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:grid-cols-3"
           >
             <div className="md:col-span-2 space-y-4">
               <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
@@ -499,7 +540,7 @@ export default function Home() {
                 sociais.
               </p>
             </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
+            <div className="self-start rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
               <h3 className="text-lg font-semibold text-[var(--foreground)]">
                 O que estou explorando agora
               </h3>
@@ -514,10 +555,10 @@ export default function Home() {
           </section>
         </div>
 
-        <div className="section-wrapper flex min-h-screen items-center justify-center">
+        <div>
           <section
             id="contato"
-            className="anchor-section grid min-h-[65vh] gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-8 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:grid-cols-2"
+            className="anchor-section grid gap-6 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 md:p-8 shadow-[0_20px_70px_-60px_rgba(58,49,43,0.16)] md:grid-cols-[1fr_minmax(0,260px)]"
           >
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted)]">
@@ -529,7 +570,7 @@ export default function Home() {
               <p className="text-base text-[var(--muted)]">
                 Aberto a colaborações, consultorias e products labs.
               </p>
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-1">
                 {contactMethods.map((method) => (
                   <a
                     key={method.label}
@@ -548,25 +589,23 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className="flex h-full rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-3">
-              <div className="relative h-full w-full overflow-hidden rounded-xl bg-[var(--header-footer)]">
+            <div className="mx-auto w-full max-w-[260px] rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-3">
+              <div className="relative aspect-[1696/2528] w-full overflow-hidden rounded-xl bg-[var(--header-footer)]">
                 {theme === "light" ? (
                   <Image
                     src="/claro.png"
                     alt="Roteiro rápido - tema claro"
                     fill
-                    sizes="(min-width: 768px) 500px, 100vw"
+                    sizes="260px"
                     className="object-contain"
-                    priority
                   />
                 ) : (
                   <Image
                     src="/escuro.png"
                     alt="Roteiro rápido - tema escuro"
                     fill
-                    sizes="(min-width: 768px) 500px, 100vw"
+                    sizes="260px"
                     className="object-contain"
-                    priority
                   />
                 )}
               </div>
@@ -620,7 +659,7 @@ export default function Home() {
         </div>
       )}
 
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(58,49,43,0.16)]">
+      <footer className="border-t border-[var(--border)] bg-[var(--header-footer)] backdrop-blur-sm shadow-[0_-10px_30px_-20px_rgba(58,49,43,0.16)]">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 text-sm text-[var(--muted)] md:flex-row md:items-center md:px-6">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
@@ -630,7 +669,7 @@ export default function Home() {
               © {year} — Todos os direitos (ainda não) reservados.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <a
               className="rounded-full border border-[var(--border)] px-4 py-2 font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]"
               href="mailto:p3droon3@gmail.com"
