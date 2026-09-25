@@ -6,8 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Dictionary, Locale } from "./dictionaries";
 import { projects as projectList } from "./projects/data";
-import { sectionProgress } from "./scene/progress";
-import DevCycle from "./dev-cycle";
+import { flightPhases, flightProgress, LANDED_AT, sectionProgress } from "./scene/progress";
+import type { Flight } from "./scene/section-scene";
 import { useTheme } from "./theme";
 
 // three.js só é baixado no desktop, depois da primeira pintura.
@@ -38,6 +38,22 @@ const tagClass =
   "rounded-full border border-[var(--border)] bg-[var(--header-footer)] px-3 py-1 text-xs text-[var(--foreground)]";
 const outlineButtonClass =
   "rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]";
+
+// Avião do mobile (sem cena 3D): entra pela direita e pousa no canal de Email.
+function PaperPlane({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path d="M3 11L21 4L14 21L11 13Z" fill="currentColor" fillOpacity="0.25" />
+      <path
+        d="M3 11L21 4L14 21L11 13ZM21 4L11 13"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 // Marca a passagem entre seções: número, nome e um fio, ancorando o olhar.
 function SectionDivider({ index, label }: { index: number; label: string }) {
@@ -72,6 +88,17 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
   // Progresso contínuo entre seções (0..n-1), compartilhado com a cena 3D sem re-render.
   const progressRef = useRef(0);
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  // Voo do avião até os canais de contato: progresso vem do scroll, alvo do hover/foco.
+  const flightRef = useRef<Flight>({ progress: 0, target: null });
+  const channelRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const [hoveredChannel, setHoveredChannel] = useState<number | null>(null);
+  const [landed, setLanded] = useState(false);
+  const [contactReached, setContactReached] = useState(false);
+  const targetChannel = hoveredChannel ?? 0;
+  const aimAt = (index: number | null) => {
+    setHoveredChannel(index);
+    flightRef.current.target = channelRefs.current[index ?? 0];
+  };
 
   useEffect(() => {
     let frame = 0;
@@ -89,6 +116,14 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
         dot?.style.setProperty("--w", String(Math.max(0, 1 - Math.abs(progress - index))))
       );
       setActiveSection(nav[Math.round(progress)].id);
+
+      const contactTop = document.getElementById("contato")?.getBoundingClientRect().top ?? Infinity;
+      const remainingScroll = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+      const flight = flightProgress(contactTop, window.innerHeight * 0.85, contactTop - remainingScroll);
+      flightRef.current.progress = flight;
+      flightRef.current.target ??= channelRefs.current[0];
+      setLanded(flightPhases(flight).travel >= LANDED_AT);
+      if (flight > 0) setContactReached(true);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -230,8 +265,8 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
       </div>
 
       {isDesktop && (
-        <div className="pointer-events-none fixed right-0 top-1/2 z-10 h-[min(70vh,560px)] w-[var(--gutter)] -translate-y-1/2">
-          <SectionScene progressRef={progressRef} />
+        <div className="pointer-events-none fixed inset-0 z-10">
+          <SectionScene progressRef={progressRef} flightRef={flightRef} />
         </div>
       )}
 
@@ -472,37 +507,40 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
 
         <section
           id="contato"
-          className={`grid gap-6 md:grid-cols-[1fr_280px] md:items-center ${sectionClass}`}
+          className={`space-y-4 overflow-hidden ${sectionClass}`}
         >
-          <div className="space-y-4">
-            <p className={eyebrowClass}>{contact.eyebrow}</p>
-            <h2 className="text-3xl font-semibold text-[var(--foreground)]">{contact.title}</h2>
-            <p className="text-[var(--muted)]">{contact.text}</p>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-1">
-              {contactMethods.map((method) => (
-                <a
-                  key={method.label}
-                  className="flex flex-col gap-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 transition hover:-translate-y-[1px] hover:border-[var(--accent)]/60"
-                  href={method.href}
-                  target={method.href.startsWith("http") ? "_blank" : undefined}
-                  rel={method.href.startsWith("http") ? "noreferrer" : undefined}
-                >
-                  <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
-                    {method.label}
-                  </span>
-                  <span className="break-all text-lg font-semibold text-[var(--foreground)]">
-                    {method.value}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-          <div className="mx-auto w-fit rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-2">
-            <DevCycle
-              stages={contact.cycle}
-              center={contact.cycleCenter}
-              label={contact.cycleLabel}
-            />
+          <p className={eyebrowClass}>{contact.eyebrow}</p>
+          <h2 className="text-3xl font-semibold text-[var(--foreground)]">{contact.title}</h2>
+          <p className="text-[var(--muted)]">{contact.text}</p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3" onMouseLeave={() => aimAt(null)}>
+            {contactMethods.map((method, index) => (
+              <a
+                key={method.label}
+                ref={(channel) => {
+                  channelRefs.current[index] = channel;
+                }}
+                className={`relative flex flex-col gap-1 rounded-2xl border bg-[var(--card)] p-4 transition hover:-translate-y-[1px] ${landed && targetChannel === index
+                  ? "border-[var(--accent)] shadow-[0_0_0_4px_color-mix(in_srgb,var(--accent)_20%,transparent)]"
+                  : "border-[var(--border)] hover:border-[var(--accent)]/60"
+                  }`}
+                href={method.href}
+                target={method.href.startsWith("http") ? "_blank" : undefined}
+                rel={method.href.startsWith("http") ? "noreferrer" : undefined}
+                onMouseEnter={() => aimAt(index)}
+                onFocus={() => aimAt(index)}
+                onBlur={() => aimAt(null)}
+              >
+                <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
+                  {method.label}
+                </span>
+                <span className="break-all text-lg font-semibold text-[var(--foreground)]">
+                  {method.value}
+                </span>
+                {index === 0 && !isDesktop && (
+                  <PaperPlane className={`landing-plane ${contactReached ? "is-landing" : ""}`} />
+                )}
+              </a>
+            ))}
           </div>
         </section>
       </main>

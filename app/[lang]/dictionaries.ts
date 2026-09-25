@@ -194,10 +194,6 @@ const pt = {
     eyebrow: "Contato",
     title: "Vamos falar sobre o próximo projeto?",
     text: "Aberto a colaborações, consultorias, auditorias de código e product labs.",
-    cycle: ["Descoberta", "Requisitos", "Arquitetura", "Código", "Testes", "Entrega"],
-    cycleCenter: "seu projeto",
-    cycleLabel:
-      "Ciclo de desenvolvimento: descoberta, requisitos, arquitetura, código, testes e entrega, repetindo a cada iteração.",
   },
   footer: {
     label: "Portfólio",
@@ -397,10 +393,6 @@ const en: Dictionary = {
     eyebrow: "Contact",
     title: "Shall we talk about your next project?",
     text: "Open to collaborations, consulting, code audits and product labs.",
-    cycle: ["Discovery", "Requirements", "Architecture", "Code", "Tests", "Delivery"],
-    cycleCenter: "your project",
-    cycleLabel:
-      "Development cycle: discovery, requirements, architecture, code, tests and delivery, repeating every iteration.",
   },
   footer: {
     label: "Portfolio",
