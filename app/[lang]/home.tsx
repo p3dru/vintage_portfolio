@@ -96,6 +96,11 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
     flightRef.current.target = channelRefs.current[index ?? 0];
   };
 
+  // Avisa o dono (bot do Telegram em /api/notify) que alguém abriu o site; falha é irrelevante.
+  useEffect(() => {
+    fetch("/api/notify").catch(() => {});
+  }, []);
+
   useEffect(() => {
     let frame = 0;
     const update = () => {

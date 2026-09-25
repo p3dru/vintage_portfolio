@@ -13,6 +13,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Ignora internos do Next e arquivos estáticos (qualquer caminho com extensão).
-  matcher: ["/((?!_next|.*\\..*).*)"],
+  // Ignora internos do Next, as funções em /api e arquivos estáticos (caminhos com extensão).
+  matcher: ["/((?!_next|api/|.*\\..*).*)"],
 };
