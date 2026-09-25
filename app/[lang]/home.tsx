@@ -1,11 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import type { Dictionary, Locale } from "./dictionaries";
 import { projects as projectList } from "./projects/data";
+import { sectionProgress } from "./scene/progress";
 import { useTheme } from "./theme";
+
+// three.js só é baixado no desktop, depois da primeira pintura.
+const SectionScene = dynamic(() => import("./scene/section-scene"), { ssr: false });
+
+const DESKTOP_QUERY = "(min-width: 1024px)";
+const subscribeDesktop = (onChange: () => void) => {
+  const query = window.matchMedia(DESKTOP_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
 
 const EMAIL = "p3droon3@gmail.com";
 const LINKEDIN = "https://www.linkedin.com/in/dev-pedro/";
@@ -34,25 +46,43 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
   const { header, nav, hero, projects, foundations, ai, about, contact, footer } = dict;
   const otherLang: Locale = lang === "pt" ? "en" : "pt";
 
+  const isDesktop = useSyncExternalStore(
+    subscribeDesktop,
+    () => window.matchMedia(DESKTOP_QUERY).matches,
+    () => false
+  );
+  // Progresso contínuo entre seções (0..n-1), compartilhado com a cena 3D sem re-render.
+  const progressRef = useRef(0);
+  const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.target.id) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      // Seção ativa = a que cruza a linha central da viewport (funciona para seções de qualquer altura).
-      { rootMargin: "-50% 0px -50% 0px" }
-    );
-
-    nav.forEach(({ id }) => {
-      const section = document.getElementById(id);
-      if (section) observer.observe(section);
-    });
-
-    return () => observer.disconnect();
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const tops = nav.map(({ id }) => document.getElementById(id)?.getBoundingClientRect().top ?? 0);
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      const progress = atBottom
+        ? nav.length - 1
+        : sectionProgress(tops, window.innerHeight / 2, window.innerHeight * 0.25);
+      progressRef.current = progress;
+      // Cada ponto perde ou ganha cor na mesma medida em que a forma da direita se transforma.
+      dotRefs.current.forEach((dot, index) =>
+        dot?.style.setProperty("--w", String(Math.max(0, 1 - Math.abs(progress - index))))
+      );
+      setActiveSection(nav[Math.round(progress)].id);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
   }, [nav]);
 
   const themeLabel = theme === "light" ? header.themeToDark : header.themeToLight;
@@ -160,30 +190,34 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
       </header>
 
       <div className="fixed left-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 lg:flex">
-        {nav.map((link) => {
-          const isActive = activeSection === link.id;
-          return (
-            <a
-              key={link.id}
-              href={`#${link.id}`}
-              className="group relative flex h-4 w-4 items-center justify-center"
-              aria-label={link.label}
-            >
-              <span
-                className={`block h-4 w-4 rounded-full border transition-all duration-200 ${isActive
-                  ? "border-[var(--accent)] bg-[var(--accent)] shadow-[0_0_0_6px_rgba(176,125,98,0.25)] scale-110"
-                  : "border-[var(--border)] bg-[var(--header-footer)] group-hover:border-[var(--accent)]"
-                  }`}
-              />
-              <span className="absolute left-5 hidden whitespace-nowrap rounded-md bg-[var(--foreground)] px-2 py-1 text-[11px] text-[var(--background)] shadow-sm group-hover:inline">
-                {link.label}
-              </span>
-            </a>
-          );
-        })}
+        {nav.map((link, index) => (
+          <a
+            key={link.id}
+            href={`#${link.id}`}
+            className="group relative flex h-4 w-4 items-center justify-center"
+            aria-label={link.label}
+            aria-current={activeSection === link.id ? "true" : undefined}
+          >
+            <span
+              ref={(dot) => {
+                dotRefs.current[index] = dot;
+              }}
+              className="section-dot"
+            />
+            <span className="absolute left-5 hidden whitespace-nowrap rounded-md bg-[var(--foreground)] px-2 py-1 text-[11px] text-[var(--background)] shadow-sm group-hover:inline">
+              {link.label}
+            </span>
+          </a>
+        ))}
       </div>
 
-      <main className="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-10 md:px-6 md:py-14 lg:px-14">
+      {isDesktop && (
+        <div className="pointer-events-none fixed right-0 top-1/2 z-10 h-[min(70vh,560px)] w-[280px] -translate-y-1/2">
+          <SectionScene progressRef={progressRef} />
+        </div>
+      )}
+
+      <main className="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-10 md:px-6 md:py-14 lg:mr-[280px] lg:px-14 min-[1712px]:mx-auto">
         <section
           id="inicio"
           className="anchor-section grid gap-8 rounded-3xl border border-[var(--border)] bg-[var(--section)] p-5 shadow-[0_20px_80px_-60px_rgba(58,49,43,0.22)] md:p-12"
@@ -209,7 +243,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             {[hero.availability, hero.stack].map((card) => (
               <div
                 key={card.label}
@@ -224,7 +258,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                 <p className="text-sm text-[var(--muted)]">{card.text}</p>
               </div>
             ))}
-            <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] sm:col-span-2 lg:col-span-1">
+            <div className="rounded-2xl border-2 border-[var(--border)] bg-[var(--card)] p-4 shadow-[0_12px_38px_-26px_rgba(58,49,43,0.28)] sm:col-span-2">
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
                 {hero.highlights.label}
               </p>
@@ -258,7 +292,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
             </a>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {projectList.map((project, index) => (
               <Link
                 key={project.slug}
@@ -266,7 +300,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                 className={`group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)] ${
                   // Um card sobrando na última linha ocupa a linha inteira, sem deixar buraco.
                   index === projectList.length - 1 && projectList.length % 2 === 1 ? "md:col-span-2" : ""
-                } ${index === projectList.length - 1 && projectList.length % 3 === 1 ? "lg:col-span-3" : ""}`}
+                } ${index === projectList.length - 1 && projectList.length % 3 === 1 ? "xl:col-span-3" : ""}`}
                 href={`/${lang}/projects/${project.slug}`}
               >
                 <div className="space-y-3">
@@ -335,9 +369,9 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
             <p className="text-[var(--muted)]">{ai.intro}</p>
           </div>
 
-          <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <ol className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-5">
             {ai.steps.map((step, index) => (
-              <li key={step.title} className={`space-y-2 ${cardClass} p-4`}>
+              <li key={step.title} className={`space-y-2 ${cardClass} p-4 sm:last:col-span-2 2xl:last:col-span-1`}>
                 <span className="font-mono text-xs text-[var(--accent)]">
                   {String(index + 1).padStart(2, "0")}
                 </span>

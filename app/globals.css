@@ -107,3 +107,20 @@ html::-webkit-scrollbar {
 [data-theme="dark"] [data-project="grain-classification"] { --accent: #e8c35f; --accent-soft: #7d6a3a; }
 [data-theme="dark"] [data-project="ppgzt"] { --accent: #e08aa0; --accent-soft: #6e3a48; }
 [data-theme="dark"] [data-project="ai-buildcore"] { --accent: #b9a2e6; --accent-soft: #5a4c73; }
+
+/* Ponto de seção: --w (0..1) vem do progresso do scroll e interpola a cor em sincronia com a cena 3D. */
+.section-dot {
+  --w: 0;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) calc(var(--w) * 100%), var(--border));
+  background: color-mix(in srgb, var(--accent) calc(var(--w) * 100%), var(--header-footer));
+  box-shadow: 0 0 0 calc(var(--w) * 6px) color-mix(in srgb, var(--accent) 25%, transparent);
+  transform: scale(calc(1 + var(--w) * 0.1));
+}
+
+.group:hover .section-dot {
+  border-color: var(--accent);
+}
