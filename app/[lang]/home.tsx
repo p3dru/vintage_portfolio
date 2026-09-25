@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Dictionary, Locale } from "./dictionaries";
 import { projects as projectList } from "./projects/data";
-import { flightPhases, flightProgress, LANDED_AT, sectionProgress } from "./scene/progress";
+import { flightArmed, sectionProgress } from "./scene/progress";
 import type { Flight } from "./scene/section-scene";
 import { DESKTOP_QUERY, useMediaQuery } from "./media";
 import { useTheme } from "./theme";
@@ -80,7 +80,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
   const progressRef = useRef(0);
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
   // Voo do avião até os canais de contato: progresso vem do scroll, alvo do hover/foco.
-  const flightRef = useRef<Flight>({ progress: 0, target: null });
+  const flightRef = useRef<Flight>({ armed: false, target: null });
   const channelRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [hoveredChannel, setHoveredChannel] = useState<number | null>(null);
   const [landed, setLanded] = useState(false);
@@ -100,7 +100,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       const progress = atBottom
         ? nav.length - 1
-        : sectionProgress(tops, window.innerHeight / 2, window.innerHeight * 0.25);
+        : sectionProgress(tops, window.innerHeight / 2, window.innerHeight * 0.15);
       progressRef.current = progress;
       // Cada ponto perde ou ganha cor na mesma medida em que a forma da direita se transforma.
       dotRefs.current.forEach((dot, index) =>
@@ -109,12 +109,11 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
       setActiveSection(nav[Math.round(progress)].id);
 
       const contactTop = document.getElementById("contato")?.getBoundingClientRect().top ?? Infinity;
-      const remainingScroll = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
-      const flight = flightProgress(contactTop, window.innerHeight, contactTop - remainingScroll);
-      flightRef.current.progress = flight;
+      const armed = flightArmed(contactTop / window.innerHeight, atBottom, flightRef.current.armed);
+      flightRef.current.armed = armed;
       flightRef.current.target ??= channelRefs.current[0];
-      setLanded(flightPhases(flight).travel >= LANDED_AT);
-      if (flight > 0) setContactReached(true);
+      setLanded(armed);
+      if (armed) setContactReached(true);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);

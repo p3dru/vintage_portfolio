@@ -13,10 +13,11 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-import { flightPhases, smoothstep } from "./progress";
+import { FLIGHT_MS, flightPhases, smoothstep } from "./progress";
 import { planeLanded, POINT_COUNT, shapes } from "./shapes";
 
-export type Flight = { progress: number; target: HTMLElement | null };
+// armed: o scroll chegou ao contato; o voo então avança (ou volta) pelo tempo.
+export type Flight = { armed: boolean; target: HTMLElement | null };
 
 const TRAIL_POINTS = 64;
 const LANDED_RADIUS = 16; // px: avião pousado ≈ 24px de largura
@@ -124,7 +125,8 @@ export default function SectionScene({
     const main = document.querySelector("main");
     let shown = progressRef.current ?? 0;
     let lastShown = -1;
-    let travelShown = 0;
+    let flightClock = 0; // 0 = na lateral, 1 = pousado; anda FLIGHT_MS por percurso
+    let lastTime = -1;
     let spin = 0;
     let settle = 0;
     let lastSettle = -1;
@@ -141,18 +143,21 @@ export default function SectionScene({
     const position = { x: NaN, y: NaN };
 
     let frame = requestAnimationFrame(function tick(time) {
-      const flight = flightRef.current ?? { progress: 0, target: null };
-      const { form, travel: travelTarget } = flightPhases(flight.progress);
+      const flight = flightRef.current ?? { armed: false, target: null };
+      const dt = lastTime < 0 ? 0 : Math.min(64, time - lastTime);
+      lastTime = time;
+      const direction = flight.armed ? 1 : -1;
+      flightClock = reducedMotion
+        ? Number(flight.armed)
+        : Math.min(1, Math.max(0, flightClock + (direction * dt) / FLIGHT_MS));
+      const { form, travel } = flightPhases(flightClock);
 
       // Movimento reduzido: troca direta de forma e de lugar, sem morph, voo nem giro.
       const morphTarget = Math.max(progressRef.current ?? 0, shapes.length - 2 + form);
-      const target = flight.progress > 0 ? morphTarget : (progressRef.current ?? 0);
+      const target = flightClock > 0 ? morphTarget : (progressRef.current ?? 0);
       shown = reducedMotion ? Math.round(target) : shown + (target - shown) * 0.08;
-      travelShown = reducedMotion
-        ? Math.round(travelTarget)
-        : travelShown + (travelTarget - travelShown) * 0.05;
-      const t = smoothstep(travelShown);
-      const landed = travelShown > 0.99;
+      const t = smoothstep(travel);
+      const landed = travel >= 1;
 
       // Lateral: centro do espaço entre o fim do conteúdo e a borda direita.
       const railX = ((main?.getBoundingClientRect().right ?? width * 0.8) + width) / 2;
@@ -207,7 +212,7 @@ export default function SectionScene({
         flare = Math.sin(Math.PI * Math.min(1, Math.max(0, (t - 0.8) / 0.2))) * 0.35;
         bank = Math.sin(t * Math.PI) * 0.6;
         headingWeight = 1 - smoothstep(Math.min(1, t / 0.9));
-        if (travelShown < 0.001) facing = LEFT;
+        if (travel <= 0) facing = LEFT;
       }
 
       // Pousado: o avião 3D se "dobra" no contorno plano do avião de papel, de frente para a
@@ -247,11 +252,11 @@ export default function SectionScene({
       // Pontos finos ao assentar, para o contorno e a dobra lerem como desenho.
       material.size = (2.5 - t - 0.5 * s) * pixelRatio;
 
-      if (flight.progress <= 0) {
+      if (flightClock <= 0) {
         // Lateral: formas girando devagar.
         if (!reducedMotion) spin += 0.003;
         points.rotation.set(0, spin, 0);
-      } else if (travelShown < 0.001) {
+      } else if (travel <= 0) {
         // Virando avião na lateral: o giro desacelera até o nariz apontar para a esquerda,
         // sempre no mesmo sentido, sem meia-volta.
         spin = reducedMotion ? LEFT : spin + (forwardTo(spin, LEFT) - spin) * 0.05;
