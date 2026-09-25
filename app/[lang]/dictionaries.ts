@@ -64,66 +64,26 @@ const pt = {
     eyebrow: "Projetos",
     title: "Soluções construídas com foco técnico",
     previous: "Portfólio anterior ↗",
-    cardLabel: "Projeto",
-    view: "Ver ↗",
-    items: [
-      {
-        title: "DisasterScan",
-        summary:
-          "Plataforma para monitoramento, previsão e mitigação de desastres naturais, integrando múltiplas fontes de dados para apoiar a decisão estratégica. Indicadores, alertas e dashboards analíticos para riscos ambientais.",
-        tags: ["FastAPI", "Next.js", "PostgreSQL"],
-        link: "https://icognitiva.com/disasterscan",
-      },
-      {
-        title: "Atlas Basis (Motor de Otimização Logística 3D)",
-        summary:
-          "Plataforma de orquestração logística e roteamento tático 3D. Distribui rotas para múltiplas frotas com clustering K-Means e algoritmos TSP. Processamento e integração OSRM rodam em Web Workers (client-side), mantendo as simulações 3D consistentes.",
-        tags: ["Vue 3", "MapLibre", "OSRM", "Web Workers"],
-        link: "https://atlasbasis.vercel.app/",
-      },
-      {
-        title: "Mini Lakehouse Agro",
-        summary:
-          "Plataforma analítica end-to-end em Arquitetura Medallion, focada no agronegócio brasileiro. Pipelines ETL orquestrados unificam fontes públicas (clima, safras e mercado financeiro) e alimentam um motor de correlação estatística exposto em dashboards interativos.",
-        tags: ["Kestra", "FastAPI", "DuckDB", "Next.js"],
-        link: "https://github.com/p3dru/agro-datalake/tree/main",
-      },
-      {
-        title: "LibreETL",
-        summary:
-          "Plataforma client-side (zero-backend) para tratamento visual de dados. Limpeza e transformação de datasets direto no navegador, sem código, com motor de diagnóstico e privacidade garantida pela arquitetura local-first.",
-        tags: ["Next.js", "Dexie.js", "Zod"],
-        link: "https://libre-etl.vercel.app/",
-      },
-      {
-        title: "Classificação de Grãos com Visão Computacional",
-        summary:
-          "Sistema de IA para segmentar e classificar grãos agrícolas (defeituosos, danificados e saudáveis), com pipeline de imagens, extração de características e análise de desempenho. Integra backend, banco e app mobile para uso prático.",
-        tags: ["YOLO", "Flutter", "PostgreSQL"],
-        link: "",
-        status: "dev",
-      },
-      {
-        title: "Site Institucional – Programa PPGZT",
-        summary:
-          "Site institucional para divulgação acadêmica, com organização de conteúdo, arquivos, painel administrativo e suporte a PT/EN via i18n.",
-        tags: ["NestJS", "React", "PostgreSQL"],
-        link: "",
-        status: "offline",
-      },
-    ] as { title: string; summary: string; tags: string[]; link: string; status?: "dev" | "offline" }[],
+    view: "Ver →",
+    statuses: {
+      live: "Publicado",
+      opensource: "Código aberto",
+      prerelease: "Pré-release",
+      dev: "Em desenvolvimento",
+      offline: "Fora do ar",
+      personal: "Uso pessoal",
+    },
   },
-  modal: {
-    label: "Aviso",
-    close: "Fechar",
-    dev: {
-      title: "Projeto em desenvolvimento",
-      text: "Este projeto ainda não foi disponibilizado. Se quiser saber mais, entre em contato e compartilho o que for possível sobre a versão mais recente.",
-    },
-    offline: {
-      title: "Sistema indisponível",
-      text: "O sistema foi retirado do ar após o fim do contrato de hospedagem. Se quiser detalhes técnicos sobre como foi construído, fique à vontade para entrar em contato.",
-    },
+  projectPage: {
+    back: "← Voltar ao portfólio",
+    context: "Contexto",
+    role: "Meu papel",
+    decisions: "Decisões e porquês",
+    status: "Status",
+    site: "Acessar site ↗",
+    repo: "Ver repositório ↗",
+    stack: "Stack",
+    next: "Próximo projeto",
   },
   foundations: {
     eyebrow: "Fundamentos",
@@ -304,66 +264,26 @@ const en: Dictionary = {
     eyebrow: "Projects",
     title: "Solutions built with a technical focus",
     previous: "Previous portfolio ↗",
-    cardLabel: "Project",
-    view: "View ↗",
-    items: [
-      {
-        title: "DisasterScan",
-        summary:
-          "Platform for monitoring, forecasting and mitigating natural disasters, integrating multiple data sources to support strategic decisions. Indicators, alerts and analytical dashboards for environmental risks.",
-        tags: ["FastAPI", "Next.js", "PostgreSQL"],
-        link: "https://icognitiva.com/disasterscan",
-      },
-      {
-        title: "Atlas Basis (3D Logistics Optimization Engine)",
-        summary:
-          "Logistics orchestration and 3D tactical routing platform. Distributes routes across multiple fleets using K-Means clustering and TSP algorithms. Processing and OSRM integration run in Web Workers (client-side), keeping 3D simulations consistent.",
-        tags: ["Vue 3", "MapLibre", "OSRM", "Web Workers"],
-        link: "https://atlasbasis.vercel.app/",
-      },
-      {
-        title: "Mini Lakehouse Agro",
-        summary:
-          "End-to-end analytics platform built on a Medallion Architecture for Brazilian agribusiness. Orchestrated ETL pipelines unify public sources (weather, crops and financial markets) and feed a statistical correlation engine exposed through interactive dashboards.",
-        tags: ["Kestra", "FastAPI", "DuckDB", "Next.js"],
-        link: "https://github.com/p3dru/agro-datalake/tree/main",
-      },
-      {
-        title: "LibreETL",
-        summary:
-          "Client-side (zero-backend) platform for visual data preparation. Cleans and transforms datasets right in the browser, no code needed, with a diagnostics engine and privacy guaranteed by a local-first architecture.",
-        tags: ["Next.js", "Dexie.js", "Zod"],
-        link: "https://libre-etl.vercel.app/",
-      },
-      {
-        title: "Grain Classification with Computer Vision",
-        summary:
-          "AI system that segments and classifies agricultural grains (defective, damaged and healthy), with an image pipeline, feature extraction and performance analysis. Integrates backend, database and a mobile app for field use.",
-        tags: ["YOLO", "Flutter", "PostgreSQL"],
-        link: "",
-        status: "dev",
-      },
-      {
-        title: "Institutional Website – PPGZT Program",
-        summary:
-          "Institutional website for academic outreach, with content organization, file management, an admin panel and PT/EN support via i18n.",
-        tags: ["NestJS", "React", "PostgreSQL"],
-        link: "",
-        status: "offline",
-      },
-    ],
+    view: "View →",
+    statuses: {
+      live: "Live",
+      opensource: "Open source",
+      prerelease: "Pre-release",
+      dev: "In development",
+      offline: "Offline",
+      personal: "Personal use",
+    },
   },
-  modal: {
-    label: "Notice",
-    close: "Close",
-    dev: {
-      title: "Project in development",
-      text: "This project hasn't been released yet. If you'd like to know more, get in touch and I'll share what I can about the latest version.",
-    },
-    offline: {
-      title: "System unavailable",
-      text: "The system was taken offline after its hosting contract ended. If you'd like technical details on how it was built, feel free to reach out.",
-    },
+  projectPage: {
+    back: "← Back to portfolio",
+    context: "Context",
+    role: "My role",
+    decisions: "Decisions and whys",
+    status: "Status",
+    site: "Visit site ↗",
+    repo: "View repository ↗",
+    stack: "Stack",
+    next: "Next project",
   },
   foundations: {
     eyebrow: "Foundations",

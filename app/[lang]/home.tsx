@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Dictionary, Locale } from "./dictionaries";
+import { projects as projectList } from "./projects/data";
+import { useTheme } from "./theme";
 
 const EMAIL = "p3droon3@gmail.com";
 const LINKEDIN = "https://www.linkedin.com/in/dev-pedro/";
@@ -24,34 +26,13 @@ const tagClass =
 const outlineButtonClass =
   "rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:-translate-y-[1px] hover:border-[var(--accent)] hover:text-[var(--accent)]";
 
-// O tema vive no atributo data-theme do <html> (aplicado antes da pintura pelo layout).
-type Theme = "light" | "dark";
-const subscribeTheme = (onChange: () => void) => {
-  const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  return () => observer.disconnect();
-};
-const readTheme = (): Theme =>
-  document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-
 export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary }) {
-  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light" as Theme);
+  const { theme, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState("inicio");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState<"dev" | "offline" | null>(null);
   const year = new Date().getFullYear();
-  const { header, nav, hero, projects, modal, foundations, ai, about, contact, footer } = dict;
+  const { header, nav, hero, projects, foundations, ai, about, contact, footer } = dict;
   const otherLang: Locale = lang === "pt" ? "en" : "pt";
-
-  const toggleTheme = () => {
-    const next = theme === "light" ? "dark" : "light";
-    document.documentElement.dataset.theme = next;
-    try {
-      window.localStorage.setItem("theme", next);
-    } catch {
-      // Sem storage (modo privado): o tema vale só para esta visita.
-    }
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -278,29 +259,28 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {projects.items.map((project) => (
-              <a
-                key={project.title}
-                className="group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)]/40 hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)]"
-                href={project.status ? "#projetos" : project.link}
-                onClick={(e) => {
-                  if (project.status) {
-                    e.preventDefault();
-                    setActiveModal(project.status);
-                  }
-                }}
-                target={project.status ? undefined : "_blank"}
-                rel={project.status ? undefined : "noreferrer"}
+            {projectList.map((project, index) => (
+              <Link
+                key={project.slug}
+                data-project={project.slug}
+                className={`group flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-[0_18px_60px_-50px_rgba(58,49,43,0.22)] transition hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_24px_70px_-58px_rgba(58,49,43,0.3)] ${
+                  // Um card sobrando na última linha ocupa a linha inteira, sem deixar buraco.
+                  index === projectList.length - 1 && projectList.length % 2 === 1 ? "md:col-span-2" : ""
+                } ${index === projectList.length - 1 && projectList.length % 3 === 1 ? "lg:col-span-3" : ""}`}
+                href={`/${lang}/projects/${project.slug}`}
               >
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
-                    <span>{projects.cardLabel}</span>
+                  <div className="flex items-center justify-between gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
+                    <span className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
+                      {projects.statuses[project.status]}
+                    </span>
                     <span className="text-[var(--accent)] opacity-0 transition group-hover:opacity-100">
                       {projects.view}
                     </span>
                   </div>
-                  <h3 className="text-xl font-semibold text-[var(--foreground)]">{project.title}</h3>
-                  <p className="text-sm leading-relaxed text-[var(--muted)]">{project.summary}</p>
+                  <h3 className="text-xl font-semibold text-[var(--foreground)]">{project[lang].title}</h3>
+                  <p className="text-sm leading-relaxed text-[var(--muted)]">{project[lang].summary}</p>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
@@ -309,7 +289,7 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                     </span>
                   ))}
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </section>
@@ -382,6 +362,12 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
                 </span>
               </div>
               <p className="text-sm leading-relaxed text-[var(--muted)]">{ai.buildcore.text}</p>
+              <Link
+                className="inline-block text-sm font-semibold text-[var(--accent)] transition hover:underline"
+                href={`/${lang}/projects/ai-buildcore`}
+              >
+                {projects.view}
+              </Link>
               <dl className="flex gap-6">
                 {ai.buildcore.stats.map((stat) => (
                   <div key={stat.label}>
@@ -462,52 +448,6 @@ export default function Home({ lang, dict }: { lang: Locale; dict: Dictionary })
           </div>
         </section>
       </main>
-
-      {activeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-            className="max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--header-footer)] p-6 text-[var(--foreground)] shadow-xl"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
-                  {modal.label}
-                </p>
-                <h3 id="modal-title" className="mt-1 text-xl font-semibold">
-                  {modal[activeModal].title}
-                </h3>
-              </div>
-              <button
-                type="button"
-                className="rounded-full border border-[var(--border)] px-3 py-1 text-sm text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                onClick={() => setActiveModal(null)}
-              >
-                {modal.close}
-              </button>
-            </div>
-            <p className="mt-4 text-sm text-[var(--muted)]">{modal[activeModal].text}</p>
-            <div className="mt-4 flex flex-wrap gap-2 text-sm">
-              <a
-                className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                href={`mailto:${EMAIL}`}
-              >
-                Email
-              </a>
-              <a
-                className="rounded-full border border-[var(--border)] px-3 py-1 text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                href={LINKEDIN}
-                target="_blank"
-                rel="noreferrer"
-              >
-                LinkedIn
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
 
       <footer className="border-t border-[var(--border)] bg-[var(--header-footer)] shadow-[0_-10px_30px_-20px_rgba(58,49,43,0.16)]">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 text-sm text-[var(--muted)] md:flex-row md:items-center md:px-6">

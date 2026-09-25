@@ -90,3 +90,20 @@ html::-webkit-scrollbar {
 .font-ia {
   font-family: "Krona One", sans-serif;
 }
+
+/* Personalidade por projeto: só o destaque muda, a base vintage permanece. */
+[data-project="disasterscan"] { --accent: #b5452f; --accent-soft: #efc2b3; }
+[data-project="atlas-basis"] { --accent: #2f6f7e; --accent-soft: #b9d6db; }
+[data-project="mini-lakehouse-agro"] { --accent: #6b7a3a; --accent-soft: #d3d7b0; }
+[data-project="libreetl"] { --accent: #2f7d62; --accent-soft: #bfe1d2; }
+[data-project="grain-classification"] { --accent: #a57a1f; --accent-soft: #ecd9a6; }
+[data-project="ppgzt"] { --accent: #8a2f45; --accent-soft: #e6bcc6; }
+[data-project="ai-buildcore"] { --accent: #6a4c93; --accent-soft: #d6c9ea; }
+
+[data-theme="dark"] [data-project="disasterscan"] { --accent: #f0a35e; --accent-soft: #8a5a45; }
+[data-theme="dark"] [data-project="atlas-basis"] { --accent: #7cc4d1; --accent-soft: #3d6770; }
+[data-theme="dark"] [data-project="mini-lakehouse-agro"] { --accent: #b8c47a; --accent-soft: #5d6440; }
+[data-theme="dark"] [data-project="libreetl"] { --accent: #86d4b4; --accent-soft: #3f6f5f; }
+[data-theme="dark"] [data-project="grain-classification"] { --accent: #e8c35f; --accent-soft: #7d6a3a; }
+[data-theme="dark"] [data-project="ppgzt"] { --accent: #e08aa0; --accent-soft: #6e3a48; }
+[data-theme="dark"] [data-project="ai-buildcore"] { --accent: #b9a2e6; --accent-soft: #5a4c73; }
