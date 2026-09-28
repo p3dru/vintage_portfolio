@@ -328,7 +328,7 @@ export const projects: Project[] = [
     status: "offline",
     motif: "columns",
     pt: {
-      title: "Site Institucional – PPGZT",
+      title: "Site Institucional",
       summary:
         "Site institucional para divulgação acadêmica de um programa de pós-graduação, com painel administrativo e suporte a PT/EN.",
       context:
@@ -351,7 +351,7 @@ export const projects: Project[] = [
       status: "Fora do ar após o fim do contrato de hospedagem.",
     },
     en: {
-      title: "Institutional Website – PPGZT",
+      title: "Institutional Website",
       summary:
         "Institutional website for a graduate program's academic outreach, with an admin panel and PT/EN support.",
       context:
